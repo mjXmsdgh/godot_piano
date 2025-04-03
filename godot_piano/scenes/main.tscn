@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://54b4gysqftl3"]
+
+[ext_resource type="Script" path="res://scripts/c_4.gd" id="1_fpqow"]
+[ext_resource type="Script" path="res://scripts/sound_player.gd" id="2_8do77"]
+
+[node name="main" type="Node2D"]
+
+[node name="C4" type="Node2D" parent="."]
+script = ExtResource("1_fpqow")
+
+[node name="SoundPlayer" type="AudioStreamPlayer2D" parent="C4"]
+scale = Vector2(1, 1.01299)
+autoplay = true
+script = ExtResource("2_8do77")
+
+[node name="TextureButton" type="TextureButton" parent="C4"]
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(4.52, 3.8)
+
+[connection signal="button_down" from="C4/TextureButton" to="C4" method="_on_texture_button_button_down"]
