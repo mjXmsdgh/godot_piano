@@ -1,21 +1,15 @@
 extends AudioStreamPlayer2D
 
-# C4 の周波数 (Hz)
-const C4_FREQUENCY = 261.63
-
 # サンプリングレート (Hz) - CD 音質と同じ
 const SAMPLE_RATE = 44100
 
-# バッファの長さ (秒) - 0.5 秒の音を生成
-const BUFFER_LENGTH = 0.5
-
-# 音の振幅 (0.0 ~ 1.0) - 0.5 は中くらいの音量
-const AMPLITUDE = 0.5
-
 # 再生時間を秒単位で定義
 const DURATION = 2.0
+
+#　周波数
 const FREQUENCY = 440.0
 
+# バッファサイズ
 var buffer_size=0
 
 func _ready():
