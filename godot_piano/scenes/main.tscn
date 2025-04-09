@@ -1,22 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://54b4gysqftl3"]
+[gd_scene load_steps=3 format=3 uid="uid://54b4gysqftl3"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_fdh73"]
-[ext_resource type="Texture2D" uid="uid://1uvtfyclynlw" path="res://assets/textures/white.png" id="3_ikn7s"]
-[ext_resource type="Script" path="res://scripts/key.gd" id="6_3cu5u"]
-[ext_resource type="Script" path="res://scripts/key_sound.gd" id="7_1hg6j"]
+[ext_resource type="PackedScene" uid="uid://3io1cacm1b2f" path="res://scenes/key.tscn" id="2_dp4ux"]
 
 [node name="main" type="Node2D"]
 script = ExtResource("1_fdh73")
 
-[node name="Key" type="Node2D" parent="."]
-script = ExtResource("6_3cu5u")
+[node name="Key_A" parent="." instance=ExtResource("2_dp4ux")]
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Key"]
-script = ExtResource("7_1hg6j")
-
-[node name="TextureButton" type="TextureButton" parent="Key"]
-offset_right = 40.0
-offset_bottom = 40.0
-texture_normal = ExtResource("3_ikn7s")
-
-[connection signal="button_down" from="Key/TextureButton" to="Key" method="_on_texture_button_button_down"]
+[node name="Key_B" parent="." instance=ExtResource("2_dp4ux")]
+position = Vector2(45, 0)
