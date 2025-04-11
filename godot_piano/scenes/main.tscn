@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://54b4gysqftl3"]
+[gd_scene load_steps=4 format=3 uid="uid://54b4gysqftl3"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_fdh73"]
-[ext_resource type="PackedScene" uid="uid://3io1cacm1b2f" path="res://scenes/key.tscn" id="2_dp4ux"]
+[ext_resource type="PackedScene" uid="uid://3io1cacm1b2f" path="res://scenes/key_white.tscn" id="2_dp4ux"]
+[ext_resource type="PackedScene" uid="uid://mllhv17e84ui" path="res://scenes/key_black.tscn" id="3_sm2d5"]
 
 [node name="main" type="Node2D"]
 script = ExtResource("1_fdh73")
@@ -9,4 +10,7 @@ script = ExtResource("1_fdh73")
 [node name="Key_A" parent="." instance=ExtResource("2_dp4ux")]
 
 [node name="Key_B" parent="." instance=ExtResource("2_dp4ux")]
-position = Vector2(45, 0)
+position = Vector2(35, 0)
+
+[node name="Key_As" parent="." instance=ExtResource("3_sm2d5")]
+position = Vector2(25, 0)
