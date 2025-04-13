@@ -12,9 +12,6 @@ script = ExtResource("1_fdh73")
 [node name="Key_B3" parent="." instance=ExtResource("2_dp4ux")]
 position = Vector2(35, 0)
 
-[node name="Key_As3" parent="." instance=ExtResource("3_sm2d5")]
-position = Vector2(25, 0)
-
 [node name="Key_C4" parent="." instance=ExtResource("2_dp4ux")]
 position = Vector2(70, 0)
 
@@ -38,3 +35,21 @@ position = Vector2(280, 0)
 
 [node name="Key_C5" parent="." instance=ExtResource("2_dp4ux")]
 position = Vector2(315, 0)
+
+[node name="Key_As3" parent="." instance=ExtResource("3_sm2d5")]
+position = Vector2(25, 0)
+
+[node name="Key_Cs4" parent="." instance=ExtResource("3_sm2d5")]
+position = Vector2(95, 0)
+
+[node name="Key_Ds4" parent="." instance=ExtResource("3_sm2d5")]
+position = Vector2(130, 0)
+
+[node name="Key_Fs4" parent="." instance=ExtResource("3_sm2d5")]
+position = Vector2(200, 0)
+
+[node name="Key_Gs4" parent="." instance=ExtResource("3_sm2d5")]
+position = Vector2(235, 0)
+
+[node name="Key_As4" parent="." instance=ExtResource("3_sm2d5")]
+position = Vector2(270, 0)
