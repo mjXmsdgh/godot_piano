@@ -33,8 +33,7 @@ func set_freq(input_freq: float) -> void:
 
 	freq=input_freq
 
-	# 周波数が変わったので、波形データを再生成する必要がある
-	is_wave_generated=false
+	_generate_wave_data()
 
 
 # 波形データを生成する内部関数
@@ -50,8 +49,13 @@ func _generate_wave_data() -> void:
 	# 正弦波データを生成
 	for i in range(buffer_size):
 		
-		var sample_value: float = sin(2.0 * PI * freq * float(i) / float(SAMPLE_RATE))
+		var time=float(i) / float(SAMPLE_RATE)
+		var sample_value: float = sin(2.0 * PI * freq * time)
 		
+		var envelope=max(0.0,1.0-(time/DURATION))
+		sample_value*=envelope
+
+
 		# ステレオなので左右チャンネルに同じ値を入れる
 		wave_data[i] = Vector2(sample_value, sample_value)
 

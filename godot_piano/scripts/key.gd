@@ -18,6 +18,4 @@ func set_freq(input_freq) -> void:
 
 
 func _on_texture_button_button_down() -> void:
-	print("push button")
-	
 	sound_player.play_sound()
