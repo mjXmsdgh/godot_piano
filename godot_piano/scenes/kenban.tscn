@@ -1,0 +1,55 @@
+[gd_scene load_steps=4 format=3 uid="uid://54b4gysqftl3"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_0b3j6"]
+[ext_resource type="PackedScene" uid="uid://3io1cacm1b2f" path="res://scenes/key_white.tscn" id="2_5nkss"]
+[ext_resource type="PackedScene" uid="uid://mllhv17e84ui" path="res://scenes/key_black.tscn" id="3_ennbb"]
+
+[node name="kenban" type="Node2D"]
+script = ExtResource("1_0b3j6")
+
+[node name="Key_A3" parent="." instance=ExtResource("2_5nkss")]
+
+[node name="Key_B3" parent="." instance=ExtResource("2_5nkss")]
+position = Vector2(35, 0)
+
+[node name="Key_C4" parent="." instance=ExtResource("2_5nkss")]
+position = Vector2(70, 0)
+
+[node name="Key_D4" parent="." instance=ExtResource("2_5nkss")]
+position = Vector2(105, 0)
+
+[node name="Key_E4" parent="." instance=ExtResource("2_5nkss")]
+position = Vector2(140, 0)
+
+[node name="Key_F4" parent="." instance=ExtResource("2_5nkss")]
+position = Vector2(175, 0)
+
+[node name="Key_G4" parent="." instance=ExtResource("2_5nkss")]
+position = Vector2(210, 0)
+
+[node name="Key_A4" parent="." instance=ExtResource("2_5nkss")]
+position = Vector2(245, 0)
+
+[node name="Key_B4" parent="." instance=ExtResource("2_5nkss")]
+position = Vector2(280, 0)
+
+[node name="Key_C5" parent="." instance=ExtResource("2_5nkss")]
+position = Vector2(315, 0)
+
+[node name="Key_As3" parent="." instance=ExtResource("3_ennbb")]
+position = Vector2(25, 0)
+
+[node name="Key_Cs4" parent="." instance=ExtResource("3_ennbb")]
+position = Vector2(95, 0)
+
+[node name="Key_Ds4" parent="." instance=ExtResource("3_ennbb")]
+position = Vector2(130, 0)
+
+[node name="Key_Fs4" parent="." instance=ExtResource("3_ennbb")]
+position = Vector2(200, 0)
+
+[node name="Key_Gs4" parent="." instance=ExtResource("3_ennbb")]
+position = Vector2(235, 0)
+
+[node name="Key_As4" parent="." instance=ExtResource("3_ennbb")]
+position = Vector2(270, 0)
