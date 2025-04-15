@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://2jtchecwew7c"]
+
+[ext_resource type="Script" path="res://scripts/code_manager.gd" id="1_opqh4"]
+
+[node name="CodeManager" type="Node2D"]
+script = ExtResource("1_opqh4")

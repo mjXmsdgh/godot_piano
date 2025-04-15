@@ -1,0 +1,30 @@
+{
+  "C": {
+    "name": "C Major",
+    "notes": ["C4", "E4", "G4"]
+  },
+  "Dm": {
+    "name": "D Minor",
+    "notes": ["D4", "F4", "A4"]
+  },
+  "Em": {
+    "name": "E Minor",
+    "notes": ["E4", "G4", "B4"]
+  },
+  "F": {
+    "name": "F Major",
+    "notes": ["F4", "A4", "C5"]
+  },
+  "G": {
+    "name": "G Major",
+    "notes": ["G4", "B4", "D5"]
+  },
+  "Am": {
+    "name": "A Minor",
+    "notes": ["A4", "C5", "E5"]
+  },
+  "Bdim": {
+    "name": "B Diminished",
+    "notes": ["B4", "D5", "F5"]
+  }
+}
