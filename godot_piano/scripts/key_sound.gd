@@ -1,9 +1,10 @@
 extends AudioStreamPlayer2D
 
-
+# --- 定数 ---
 const SAMPLE_RATE: int = 44100   # サンプリングレート (Hz) - CD 音質と同じ
 const DURATION: float = 1.0      # 再生時間を秒単位で定義
 
+# --- 変数 ---
 var buffer_size: int = 0         # バッファサイズ
 var freq: float = 0.0            # 現在の周波数
 
@@ -28,6 +29,7 @@ func _ready() -> void:
 # 周波数を設定する関数
 func set_freq(input_freq: float) -> void:
 
+	# 同じ周波数なら何もしない
 	if freq == input_freq:
 		return
 
@@ -52,6 +54,7 @@ func _generate_wave_data() -> void:
 		var time=float(i) / float(SAMPLE_RATE)
 		var sample_value: float = sin(2.0 * PI * freq * time)
 		
+		# DURATION秒かけて1.0から0.0に減少
 		var envelope=max(0.0,1.0-(time/DURATION))
 		sample_value*=envelope
 
