@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://va74e84i17ug"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_c0gxl"]
+[ext_resource type="PackedScene" uid="uid://54b4gysqftl3" path="res://scenes/kenban.tscn" id="1_f8mt2"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_c0gxl")
+
+[node name="kenban" parent="." instance=ExtResource("1_f8mt2")]

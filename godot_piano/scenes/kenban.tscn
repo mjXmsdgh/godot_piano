@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://54b4gysqftl3"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_0b3j6"]
+[ext_resource type="Script" path="res://scripts/kenban.gd" id="1_0b3j6"]
 [ext_resource type="PackedScene" uid="uid://3io1cacm1b2f" path="res://scenes/key_white.tscn" id="2_5nkss"]
 [ext_resource type="PackedScene" uid="uid://mllhv17e84ui" path="res://scenes/key_black.tscn" id="3_ennbb"]
 
