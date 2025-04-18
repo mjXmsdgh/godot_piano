@@ -21,51 +21,72 @@ func _process(delta: float) -> void:
 	pass
 
 
-# JSONファイルからコードデータを読み込む関数
+# コードデータを読み込むメイン関数
 func load_chord_data():
+	# 1. ファイルからJSON文字列を読み込む
+	var json_content: String = _read_json_file(CHORD_DATA_PATH)
+
+	# 2. 読み込みに失敗した場合は処理を中断
+	if json_content == null:
+		chord_data = {} # 念のため空にしておく
+		return
+
+	# 3. JSON文字列をパースしてDictionaryを取得する
+	chord_data = _parse_json_string(json_content)
+
+
+# 指定されたパスのファイルを開き、内容を文字列として読み込んで返す関数
+# 成功した場合はファイル内容の文字列、失敗した場合は null を返す
+func _read_json_file(file_path: String):
+
 	# 1. ファイルが存在するか確認
-	if not FileAccess.file_exists(CHORD_DATA_PATH):
-		printerr("エラー: 指定されたパスにファイルが見つかりません: ", CHORD_DATA_PATH)
-		return # ファイルがない場合は処理を中断
+	if not FileAccess.file_exists(file_path):
+		printerr("エラー: 指定されたパスにファイルが見つかりません: ", file_path)
+		return null
 
 	# 2. FileAccess を使ってファイルを開く (読み取りモード)
-	var file = FileAccess.open(CHORD_DATA_PATH, FileAccess.READ)
+	var file = FileAccess.open(file_path, FileAccess.READ)
 
 	# 3. ファイルオープンに成功したか確認
 	if file == null:
-		# エラーコードを取得して表示
 		var error_code = FileAccess.get_open_error()
-		printerr("エラー: ファイルを開けませんでした。パス: ", CHORD_DATA_PATH, " エラーコード: ", error_code)
-		return # ファイルが開けない場合は処理を中断
+		printerr("エラー: ファイルを開けませんでした。パス: ", file_path, " エラーコード: ", error_code)
+		return null
 
 	# 4. ファイルの内容を全てテキストとして読み込む
-	var content = file.get_as_text()
+	#   try-finally のような構文はないため、読み込み後に必ず close する
+	var content: String = file.get_as_text()
 
 	# 5. ファイルを閉じる (重要！)
-	#   ファイルを使い終わったら必ず閉じてください。
 	file.close()
 
-	# 6. JSONクラスのインスタンスを作成
+	# 6. 読み込んだ内容を返す
+	return content
+
+
+# JSON文字列をパースしてDictionaryを返す関数
+# 成功した場合はパース結果のDictionary、失敗した場合は空のDictionaryを返す
+func _parse_json_string(json_string: String) -> Dictionary:
+
+	# 1. JSONクラスのインスタンスを作成
 	var json = JSON.new()
 
-	# 7. 読み込んだテキストをパース（解析）する
-	var error = json.parse(content)
+	# 2. 読み込んだテキストをパース（解析）する
+	var error = json.parse(json_string)
 
-	# 8. パースエラーの確認
+	# 3. パースエラーの確認
 	if error != OK:
 		printerr("エラー: JSONデータのパースに失敗しました。")
-		printerr("エラーメッセージ: ", json.get_error_message())
-		printerr("エラー発生行: ", json.get_error_line())
-		return # パースに失敗した場合は処理を中断
+		printerr("  エラーメッセージ: ", json.get_error_message())
+		printerr("  エラー発生行: ", json.get_error_line())
+		return {} # パースに失敗した場合は空のDictionaryを返す
 
-	# 9. パース結果（GDScriptのデータ型、この場合はDictionary）を取得
+	# 4. パース結果を取得
 	var data = json.get_data()
 
-	# 10. 取得したデータがDictionaryであることを念のため確認
+	# 5. 取得したデータがDictionaryであることを確認
 	if typeof(data) == TYPE_DICTIONARY:
-		# メンバー変数に格納
-		chord_data = data
+		return data # Dictionaryならそのまま返す
 	else:
-		printerr("エラー: JSONデータが期待されるDictionary形式ではありません。")
-		# 必要であれば chord_data を空にするなどの処理
-		chord_data = {}
+		printerr("エラー: JSONデータが期待されるDictionary形式ではありません。実際の型: ", typeof(data))
+		return {} # 期待する型でない場合は空のDictionaryを返す
