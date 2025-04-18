@@ -10,7 +10,10 @@ const CHORD_DATA_PATH = "res://assets/chord_data.json"
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	load_chord_data()
-	pass # Replace with function body.
+
+	for key in chord_data:
+		var value=chord_data[key]
+		print(value)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
