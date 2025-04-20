@@ -1,9 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://va74e84i17ug"]
+[gd_scene load_steps=4 format=3 uid="uid://va74e84i17ug"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_c0gxl"]
 [ext_resource type="PackedScene" uid="uid://54b4gysqftl3" path="res://scenes/kenban.tscn" id="1_f8mt2"]
+[ext_resource type="Script" path="res://scripts/play_chord.gd" id="3_wayc4"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_c0gxl")
 
 [node name="kenban" parent="." instance=ExtResource("1_f8mt2")]
+
+[node name="play_chord" type="Node2D" parent="."]
+script = ExtResource("3_wayc4")
+
+[node name="play_chord" type="Button" parent="play_chord"]
+offset_left = 117.0
+offset_top = 143.0
+offset_right = 207.0
+offset_bottom = 174.0
+text = "play chord"
+
+[connection signal="pressed" from="play_chord/play_chord" to="play_chord" method="_on_play_chord_pressed"]
