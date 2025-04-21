@@ -21,5 +21,11 @@ func test() -> void:
 
 
 func _on_play_chord_pressed() -> void:
-	test()
+	
+	var test=get_node_or_null("../")
+	test.play_note("C4")
+	test.play_note("E4")
+	test.play_note("G4")
+	
+	
 	pass # Replace with function body.
