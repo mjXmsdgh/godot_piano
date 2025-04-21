@@ -26,6 +26,8 @@ func _ready() -> void:
 	key_nodes["G#4"] = $kenban/Key_Gs4 # Or Key_Ab4
 	key_nodes["A#4"] = $kenban/Key_As4 # Or Key_Bb4
 
+
+	$CodeManager.load_chord_data()
 	#test_play()
 
 
