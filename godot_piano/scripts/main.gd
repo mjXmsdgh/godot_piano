@@ -55,6 +55,6 @@ func test_play() -> void:
 # note_name: 再生したい音名 (例: "C4", "A#3")
 func play_note(note_name: String) -> void:
 
-	var key_node=key_nodes[note_name]
+	var key_node:Node=key_nodes[note_name]
 
 	key_node.play_sound()
