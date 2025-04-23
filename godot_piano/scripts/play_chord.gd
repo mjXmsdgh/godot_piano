@@ -28,18 +28,13 @@ func test() -> void:
 
 
 func _on_play_chord_pressed() -> void:
-	
-	#var test=get_node_or_null("../")
-	#test.play_note("C4")
-	#test.play_note("E4")
-	#test.play_note("G4")
 
 	var chord_to_play:String="C"
+	var chord_data=code_manager.chord_data
+	var chord_info=chord_data[chord_to_play]
 
+	var notes_array=chord_info["notes"]
 
-	if !code_manager.has_meta("chord_data") or !code_manager.chord_data.has(chord_to_play):
-		return
-	
-	
-	
-	pass # Replace with function body.
+	for note in notes_array:
+
+		piano_player.play_note(note)
