@@ -10,6 +10,14 @@ func _ready() -> void:
 
 	add_item("C4")
 	add_item("D4")
+
+	var chord_data:Dictionary=code_manager.chord_data
+
+	clear()
+
+	for chord_name in chord_data:
+		add_item(str(chord_name))
+
 	pass # Replace with function body.
 
 
