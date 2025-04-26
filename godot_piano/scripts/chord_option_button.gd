@@ -8,17 +8,12 @@ func _ready() -> void:
 
 	code_manager=get_node_or_null("../CodeManager")
 
-	add_item("C4")
-	add_item("D4")
-
 	var chord_data:Dictionary=code_manager.chord_data
 
 	clear()
 
 	for chord_name in chord_data:
 		add_item(str(chord_name))
-
-	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
