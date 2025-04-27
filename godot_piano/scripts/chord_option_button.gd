@@ -19,3 +19,11 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+
+func get_chord() -> String:
+	var index=get_selected()
+
+	var text=get_item_text(index)
+
+	return text
