@@ -22,8 +22,8 @@ func _process(delta: float) -> void:
 
 
 func get_chord() -> String:
-	var index=get_selected()
+	var index: int=get_selected()
 
-	var text=get_item_text(index)
+	var text: String=get_item_text(index)
 
 	return text
