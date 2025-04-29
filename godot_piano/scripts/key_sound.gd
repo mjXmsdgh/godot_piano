@@ -51,11 +51,11 @@ func _generate_wave_data() -> void:
 	# 正弦波データを生成
 	for i in range(buffer_size):
 		
-		var time=float(i) / float(SAMPLE_RATE)
+		var time: float=float(i) / float(SAMPLE_RATE)
 		var sample_value: float = sin(2.0 * PI * freq * time)
 		
 		# DURATION秒かけて1.0から0.0に減少
-		var envelope=max(0.0,1.0-(time/DURATION))
+		var envelope: float=max(0.0,1.0-(time/DURATION))
 		sample_value*=envelope
 
 
