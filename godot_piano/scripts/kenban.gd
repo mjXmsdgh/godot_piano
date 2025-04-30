@@ -19,6 +19,11 @@ func _ready() -> void:
 	$Key_As4.set_freq(466.16)  # A#4 / Bb4 (ラ# / シ♭)
 	$Key_B4.set_freq(493.88)   # B4 (シ)
 	$Key_C5.set_freq(523.25)   # C5 (ド) - 中央ド
+	$Key_Cs5.set_freq(554.37)  # C#5 / Db5 (ド# / レ♭)
+	$Key_D5.set_freq(587.33)   # D5 (レ)
+	$Key_Ds5.set_freq(622.25)  # D#5 / Eb5 (レ# / ミ♭)
+	$Key_E5.set_freq(659.26)   # E5 (ミ)
+	$Key_F5.set_freq(698.46)   # F5 (ファ)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

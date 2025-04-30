@@ -17,6 +17,9 @@ func _ready() -> void:
 	key_nodes["A4"] = $kenban/Key_A4
 	key_nodes["B4"] = $kenban/Key_B4
 	key_nodes["C5"] = $kenban/Key_C5
+	key_nodes["D5"] = $kenban/Key_D5
+	key_nodes["E5"] = $kenban/Key_E5
+	key_nodes["F5"] = $kenban/Key_F5
 
 
 	key_nodes["A#3"] = $kenban/Key_As3 # Or Key_Bb3 
@@ -25,6 +28,9 @@ func _ready() -> void:
 	key_nodes["F#4"] = $kenban/Key_Fs4 # Or Key_Gb4
 	key_nodes["G#4"] = $kenban/Key_Gs4 # Or Key_Ab4
 	key_nodes["A#4"] = $kenban/Key_As4 # Or Key_Bb4
+	key_nodes["C#5"] = $kenban/Key_Cs5 
+	key_nodes["D#5"] = $kenban/Key_Ds5 
+	
 
 
 	$CodeManager.load_chord_data()

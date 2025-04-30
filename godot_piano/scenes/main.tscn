@@ -25,10 +25,10 @@ text = "play chord"
 position = Vector2(17, 155)
 
 [node name="chord_OptionButton" type="OptionButton" parent="."]
-offset_left = 410.0
-offset_top = 54.0
-offset_right = 442.0
-offset_bottom = 74.0
+offset_left = 249.0
+offset_top = 150.0
+offset_right = 281.0
+offset_bottom = 170.0
 script = ExtResource("5_owia8")
 
 [connection signal="pressed" from="play_chord/play_chord" to="play_chord" method="_on_play_chord_pressed"]
