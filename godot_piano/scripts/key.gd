@@ -19,11 +19,14 @@ func set_freq(input_freq) -> void:
 
 func _on_texture_button_button_down() -> void:
 	#sound_player.play_sound()
+
 	play_sound()
 
 
 func play_sound() -> void:
 	if sound_player:
 		sound_player.play_sound()
+
+		$TextureButton.texture_normal=$TextureButton.texture_pressed
 	else:
 		print("sound error",name)
