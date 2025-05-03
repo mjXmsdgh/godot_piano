@@ -17,4 +17,7 @@ offset_bottom = 75.0
 texture_normal = ExtResource("3_v1caw")
 texture_pressed = ExtResource("4_tlug3")
 
+[node name="Timer" type="Timer" parent="."]
+
 [connection signal="button_down" from="TextureButton" to="." method="_on_texture_button_button_down"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
