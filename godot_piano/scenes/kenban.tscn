@@ -45,6 +45,9 @@ position = Vector2(385, 0)
 [node name="Key_F5" parent="." instance=ExtResource("2_5nkss")]
 position = Vector2(420, 0)
 
+[node name="Key_G5" parent="." instance=ExtResource("2_5nkss")]
+position = Vector2(455, 0)
+
 [node name="Key_As3" parent="." instance=ExtResource("3_ennbb")]
 position = Vector2(25, 0)
 
@@ -68,3 +71,6 @@ position = Vector2(340, 0)
 
 [node name="Key_Ds5" parent="." instance=ExtResource("3_ennbb")]
 position = Vector2(375, 0)
+
+[node name="Key_Fs5" parent="." instance=ExtResource("3_ennbb")]
+position = Vector2(445, 0)
