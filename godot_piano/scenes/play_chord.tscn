@@ -22,7 +22,6 @@ offset_bottom = 174.0
 text = "play chord"
 
 [node name="CodeManager" parent="." instance=ExtResource("4_dmnxa")]
-position = Vector2(17, 155)
 
 [node name="chord_OptionButton" type="OptionButton" parent="."]
 offset_left = 249.0
