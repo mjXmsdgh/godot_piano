@@ -90,3 +90,12 @@ func _parse_json_string(json_string: String) -> Dictionary:
 	else:
 		printerr("エラー: JSONデータが期待されるDictionary形式ではありません。実際の型: ", typeof(data))
 		return {} # 期待する型でない場合は空のDictionaryを返す
+
+
+# 指定されたインデックスに対応するコードデータを返す関数
+func get_chord_by_index(index: int):
+	var chord_keys = chord_data.keys() # Dictionaryのキーの配列を取得
+
+	var selected_key = chord_keys[index] # インデックスに対応するキーを取得
+
+	return chord_data[selected_key]      # キーを使ってコードデータを取得して返す

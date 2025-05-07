@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dleuwhqk3ls6j"]
+[gd_scene load_steps=4 format=3 uid="uid://dleuwhqk3ls6j"]
 
 [ext_resource type="PackedScene" uid="uid://54b4gysqftl3" path="res://scenes/kenban.tscn" id="1_ormtp"]
 [ext_resource type="PackedScene" uid="uid://2jtchecwew7c" path="res://scenes/code_manager.tscn" id="2_op7nq"]
+[ext_resource type="Script" path="res://scripts/question_node.gd" id="3_fde3m"]
 
 [node name="ChordToNotes" type="Node2D"]
 
@@ -10,6 +11,7 @@
 [node name="CodeManager" parent="." instance=ExtResource("2_op7nq")]
 
 [node name="QuestionNode" type="Node2D" parent="."]
+script = ExtResource("3_fde3m")
 
 [node name="Label" type="Label" parent="QuestionNode"]
 offset_left = 20.0
