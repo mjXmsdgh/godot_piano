@@ -6,9 +6,11 @@ var current_chord=null
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	get_node_or_null("../CodeManager")
+	code_manager=get_node_or_null("../CodeManager")
 
 	randomize()
+	
+	select_chord()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -28,4 +30,11 @@ func select_chord() -> void:
 		return
 
 
-	current_chord=code_manager.get_chord_by_index(random_index)
+	var chord_data_pair=code_manager.get_chord_by_index(random_index)
+
+
+	print(chord_data_pair[0])
+	print(chord_data_pair[1]["notes"])
+
+	
+	#$Question.text=current_chord

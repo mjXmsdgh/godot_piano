@@ -11,10 +11,6 @@ const CHORD_DATA_PATH = "res://assets/chord_data.json"
 func _ready() -> void:
 	load_chord_data()
 
-	for key in chord_data:
-		var value=chord_data[key]
-		print(value)
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -98,4 +94,4 @@ func get_chord_by_index(index: int):
 
 	var selected_key = chord_keys[index] # インデックスに対応するキーを取得
 
-	return chord_data[selected_key]      # キーを使ってコードデータを取得して返す
+	return [selected_key,chord_data[selected_key]]      # キーを使ってコードデータを取得して返す
