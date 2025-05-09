@@ -9,8 +9,6 @@ func _ready() -> void:
 	code_manager=get_node_or_null("../CodeManager")
 
 	randomize()
-	
-	select_chord()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -32,9 +30,13 @@ func select_chord() -> void:
 
 	var chord_data_pair=code_manager.get_chord_by_index(random_index)
 
+	# コード名
+	current_chord=chord_data_pair[0]
 
-	print(chord_data_pair[0])
+	# 音
 	print(chord_data_pair[1]["notes"])
 
-	
-	#$Question.text=current_chord
+# Question Buttonが押されたとき
+func _on_button_pressed() -> void:
+	select_chord()
+	$Question.text=str(current_chord)

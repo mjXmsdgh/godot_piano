@@ -13,11 +13,11 @@
 [node name="QuestionNode" type="Node2D" parent="."]
 script = ExtResource("3_fde3m")
 
-[node name="Label" type="Label" parent="QuestionNode"]
-offset_left = 20.0
-offset_top = 185.0
-offset_right = 91.0
-offset_bottom = 208.0
+[node name="Button" type="Button" parent="QuestionNode"]
+offset_left = 11.0
+offset_top = 189.0
+offset_right = 90.0
+offset_bottom = 220.0
 text = "Question"
 
 [node name="Question" type="Label" parent="QuestionNode"]
@@ -26,3 +26,5 @@ offset_top = 188.0
 offset_right = 148.0
 offset_bottom = 211.0
 text = "C"
+
+[connection signal="pressed" from="QuestionNode/Button" to="QuestionNode" method="_on_button_pressed"]
