@@ -5,6 +5,8 @@ extends Node2D
 var original_texture_normal: Texture2D
 var key_name="none"
 
+signal key_pressed(pressed_key_name)
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if sound_player==null:
@@ -25,8 +27,9 @@ func set_keyname(input_key_name) -> void :
 	key_name=input_key_name
 
 func _on_texture_button_button_down() -> void:
-	#sound_player.play_sound()
 	play_sound()
+
+	emit_signal("key_pressed",key_name)
 
 
 func play_sound() -> void:

@@ -1,12 +1,20 @@
 extends Node2D
 
 var code_manager=null
-
 var current_chord=null
+var kenban=null
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	code_manager=get_node_or_null("../CodeManager")
+
+	kenban=get_node_or_null("../kenban")
+
+	for key_child in kenban.get_children():
+		if key_child.has_signal("key_pressed"):
+			key_child.key_pressed.connect(Callable(self,"_on_key_pressed_received"))
+
+
 
 	randomize()
 
@@ -40,3 +48,8 @@ func select_chord() -> void:
 func _on_button_pressed() -> void:
 	select_chord()
 	$Question.text=str(current_chord)
+
+
+# key.gd から key_pressed シグナルを受信したときに呼び出される関数
+func _on_key_pressed_received(pressed_key_name: String) -> void:
+	print("Key pressed event received in QuestionNode: ", pressed_key_name)
