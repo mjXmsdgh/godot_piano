@@ -50,7 +50,7 @@ func test_play() -> void:
 	for item in key_nodes.keys():
 
 		# 現在のキー (音名) をコンソールに出力
-		print(item)
+		#print(item)
 
 
 		play_note(item)

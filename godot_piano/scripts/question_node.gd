@@ -2,7 +2,9 @@ extends Node2D
 
 var code_manager=null
 var current_chord=null
+var pressed_chord=null
 var kenban=null
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -50,6 +52,15 @@ func _on_button_pressed() -> void:
 	$Question.text=str(current_chord)
 
 
+func check():
+	
+	if pressed_chord.size()<2:
+		return
+
+
 # key.gd から key_pressed シグナルを受信したときに呼び出される関数
 func _on_key_pressed_received(pressed_key_name: String) -> void:
-	print("Key pressed event received in QuestionNode: ", pressed_key_name)
+
+	pressed_chord.append(pressed_key_name)
+
+	check()

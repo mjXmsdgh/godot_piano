@@ -35,7 +35,6 @@ func _on_texture_button_button_down() -> void:
 func play_sound() -> void:
 	if sound_player:
 		sound_player.play_sound()
-		print(key_name)
 
 		$TextureButton.texture_normal=$TextureButton.texture_pressed
 		reset_timer.start()
