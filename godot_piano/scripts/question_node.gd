@@ -2,7 +2,8 @@ extends Node2D
 
 var code_manager=null
 var current_chord=null
-var pressed_chord=null
+var current_chord_notes=[]
+var pressed_chord=[]
 var kenban=null
 
 
@@ -44,18 +45,37 @@ func select_chord() -> void:
 	current_chord=chord_data_pair[0]
 
 	# 音
-	print(chord_data_pair[1]["notes"])
+	current_chord_notes=chord_data_pair[1]["notes"]
+
+
 
 # Question Buttonが押されたとき
 func _on_button_pressed() -> void:
 	select_chord()
 	$Question.text=str(current_chord)
 
+	pressed_chord.clear()
+
+
 
 func check():
 	
-	if pressed_chord.size()<2:
+	if pressed_chord.size()<3:
 		return
+
+
+	var sorted_pressed=pressed_chord.duplicate()
+	sorted_pressed.sort()
+	var sorted_target=current_chord_notes.duplicate()
+	sorted_target.sort()
+
+	if sorted_pressed==sorted_target:
+		print("OK")
+	else:
+		print("NG")
+
+
+			
 
 
 # key.gd から key_pressed シグナルを受信したときに呼び出される関数
