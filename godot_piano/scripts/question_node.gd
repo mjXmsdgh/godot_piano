@@ -84,3 +84,8 @@ func _on_key_pressed_received(pressed_key_name: String) -> void:
 	pressed_chord.append(pressed_key_name)
 
 	check()
+
+
+func _on_answer_pressed() -> void:
+	print("answer")
+	pass # Replace with function body.
