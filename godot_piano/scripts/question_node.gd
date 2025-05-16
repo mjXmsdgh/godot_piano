@@ -88,4 +88,9 @@ func _on_key_pressed_received(pressed_key_name: String) -> void:
 
 func _on_answer_pressed() -> void:
 	print("answer")
+	$"../kenban".play_note("C4")
+
+	for item in current_chord_notes:
+		$"../kenban".play_note(item)
+
 	pass # Replace with function body.
