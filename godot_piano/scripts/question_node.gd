@@ -6,7 +6,6 @@ var current_chord_notes=[]
 var pressed_chord=[]
 var kenban=null
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	code_manager=get_node_or_null("../CodeManager")
@@ -73,10 +72,7 @@ func check():
 		print("OK")
 	else:
 		print("NG")
-
-
-			
-
+		
 
 # key.gd から key_pressed シグナルを受信したときに呼び出される関数
 func _on_key_pressed_received(pressed_key_name: String) -> void:
@@ -87,10 +83,9 @@ func _on_key_pressed_received(pressed_key_name: String) -> void:
 
 
 func _on_answer_pressed() -> void:
-	print("answer")
-	$"../kenban".play_note("C4")
+
+	print("----------------")
 
 	for item in current_chord_notes:
+		print(item)
 		$"../kenban".play_note(item)
-
-	pass # Replace with function body.

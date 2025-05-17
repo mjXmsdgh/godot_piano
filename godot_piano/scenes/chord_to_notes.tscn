@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dleuwhqk3ls6j"]
+[gd_scene load_steps=5 format=3 uid="uid://dleuwhqk3ls6j"]
 
 [ext_resource type="PackedScene" uid="uid://54b4gysqftl3" path="res://scenes/kenban.tscn" id="1_ormtp"]
 [ext_resource type="PackedScene" uid="uid://2jtchecwew7c" path="res://scenes/code_manager.tscn" id="2_op7nq"]
 [ext_resource type="Script" path="res://scripts/question_node.gd" id="3_fde3m"]
+[ext_resource type="Script" path="res://scripts/memory.gd" id="4_oydd0"]
 
 [node name="ChordToNotes" type="Node2D"]
 
@@ -34,5 +35,16 @@ offset_right = 240.0
 offset_bottom = 218.0
 text = "Answer"
 
+[node name="Memory" type="Node2D" parent="."]
+script = ExtResource("4_oydd0")
+
+[node name="memory" type="Button" parent="Memory"]
+offset_left = 345.0
+offset_top = 184.0
+offset_right = 418.0
+offset_bottom = 215.0
+text = "Memory"
+
 [connection signal="pressed" from="QuestionNode/Button" to="QuestionNode" method="_on_button_pressed"]
 [connection signal="pressed" from="QuestionNode/answer" to="QuestionNode" method="_on_answer_pressed"]
+[connection signal="pressed" from="Memory/memory" to="Memory" method="_on_memory_pressed"]
