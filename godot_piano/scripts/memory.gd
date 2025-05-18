@@ -14,4 +14,10 @@ func _process(delta: float) -> void:
 
 
 func _on_memory_pressed() -> void:
-	pass # Replace with function body.
+	print("memory")
+	
+	var test=get_node_or_null("../")
+
+	var temp=test.current_chord_notes
+
+	print(temp)

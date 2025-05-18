@@ -35,10 +35,10 @@ offset_right = 240.0
 offset_bottom = 218.0
 text = "Answer"
 
-[node name="Memory" type="Node2D" parent="."]
+[node name="Memory" type="Node2D" parent="QuestionNode"]
 script = ExtResource("4_oydd0")
 
-[node name="memory" type="Button" parent="Memory"]
+[node name="memory" type="Button" parent="QuestionNode/Memory"]
 offset_left = 345.0
 offset_top = 184.0
 offset_right = 418.0
@@ -47,4 +47,4 @@ text = "Memory"
 
 [connection signal="pressed" from="QuestionNode/Button" to="QuestionNode" method="_on_button_pressed"]
 [connection signal="pressed" from="QuestionNode/answer" to="QuestionNode" method="_on_answer_pressed"]
-[connection signal="pressed" from="Memory/memory" to="Memory" method="_on_memory_pressed"]
+[connection signal="pressed" from="QuestionNode/Memory/memory" to="QuestionNode/Memory" method="_on_memory_pressed"]
