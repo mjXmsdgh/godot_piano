@@ -6,6 +6,8 @@ var current_chord_notes=[]
 var pressed_chord=[]
 var kenban=null
 
+var memory_node=null
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	code_manager=get_node_or_null("../CodeManager")
@@ -15,6 +17,11 @@ func _ready() -> void:
 	for key_child in kenban.get_children():
 		if key_child.has_signal("key_pressed"):
 			key_child.key_pressed.connect(Callable(self,"_on_key_pressed_received"))
+
+
+	memory_node=get_node_or_null("./Memory")
+	memory_node.recall_chord_selected.connect(Callable(self,"_on_recall_chord_selected"))
+
 
 
 
@@ -89,3 +96,13 @@ func _on_answer_pressed() -> void:
 	for item in current_chord_notes:
 		print(item)
 		$"../kenban".play_note(item)
+
+func _on_recall_chord_selected(notes: Array) -> void:
+
+	print("received recall_chord_selected signal with notes: ",notes)
+
+	current_chord_notes=notes
+
+	$Question.text=str(current_chord)
+
+	pressed_chord.clear()

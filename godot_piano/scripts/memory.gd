@@ -2,6 +2,8 @@ extends Node2D
 
 var memory_chord_notes=[]
 
+signal recall_chord_selected(chord_notes: Array)
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -21,3 +23,14 @@ func _on_memory_pressed() -> void:
 	var temp=test.current_chord_notes
 
 	print(temp)
+
+	memory_chord_notes.append(temp)
+
+
+func _on_recall_pressed() -> void:
+
+	var selected_notes=memory_chord_notes[0]
+
+	emit_signal("recall_chord_selected",selected_notes)
+
+	memory_chord_notes.remove_at(0)

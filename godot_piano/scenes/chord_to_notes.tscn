@@ -45,6 +45,14 @@ offset_right = 418.0
 offset_bottom = 215.0
 text = "Memory"
 
+[node name="recall" type="Button" parent="QuestionNode/Memory"]
+offset_left = 345.0
+offset_top = 251.0
+offset_right = 399.0
+offset_bottom = 282.0
+text = "Recall"
+
 [connection signal="pressed" from="QuestionNode/Button" to="QuestionNode" method="_on_button_pressed"]
 [connection signal="pressed" from="QuestionNode/answer" to="QuestionNode" method="_on_answer_pressed"]
 [connection signal="pressed" from="QuestionNode/Memory/memory" to="QuestionNode/Memory" method="_on_memory_pressed"]
+[connection signal="pressed" from="QuestionNode/Memory/recall" to="QuestionNode/Memory" method="_on_recall_pressed"]
