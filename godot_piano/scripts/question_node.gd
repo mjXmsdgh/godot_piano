@@ -60,7 +60,7 @@ func _on_button_pressed() -> void:
 	select_chord()
 	$Question.text=str(current_chord)
 
-	pressed_chord.clear()
+	#pressed_chord.clear()
 
 
 
@@ -97,12 +97,13 @@ func _on_answer_pressed() -> void:
 		print(item)
 		$"../kenban".play_note(item)
 
-func _on_recall_chord_selected(notes: Array) -> void:
+func _on_recall_chord_selected(name:String,notes: Array) -> void:
 
 	print("received recall_chord_selected signal with notes: ",notes)
 
 	current_chord_notes=notes
 
-	$Question.text=str(current_chord)
+	$Question.text=str(name)
+	print(current_chord)
 
 	pressed_chord.clear()
