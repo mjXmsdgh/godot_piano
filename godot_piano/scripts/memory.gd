@@ -16,7 +16,6 @@ func _process(delta: float) -> void:
 
 
 func _on_memory_pressed() -> void:
-	print("memory")
 	
 	var test=get_node_or_null("../")
 
@@ -24,7 +23,8 @@ func _on_memory_pressed() -> void:
 
 	var temp_notes=test.current_chord_notes
 
-	print(temp_notes)
+	$ItemList.add_item(temp_chord)
+
 
 	memory_chord_notes.append([temp_chord,temp_notes])
 
