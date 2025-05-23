@@ -12,6 +12,8 @@ var is_wave_generated: bool = false                      # 波形データが現
 var wave_data: PackedVector2Array = PackedVector2Array() # 事前生成された波形データ
 
 
+## ノードがシーンツリーに追加され、準備ができたときに呼び出される初期化関数。
+## オーディオストリームの設定とバッファサイズの計算を行う。
 func _ready() -> void:
 
 	# バッファサイズを計算
@@ -26,7 +28,12 @@ func _ready() -> void:
 	self.stream = audio_stream
 
 
-# 周波数を設定する関数
+## 指定された周波数に基づいて音の準備を行う。
+##
+## @param input_freq 設定する新しい周波数 (Hz)。
+##
+## 周波数が現在の周波数と異なる場合、または波形データがまだ生成されていない場合に、
+## 新しい波形データを生成する。
 func set_freq(input_freq: float) -> void:
 	# 周波数が同じで、かつ既に波形が生成済みであれば何もしない
 	if freq == input_freq and is_wave_generated:
@@ -77,7 +84,10 @@ func _generate_wave_data() -> void:
 	is_wave_generated = true
 
 
-# 音を再生する関数
+## 設定された周波数で音を再生する。
+##
+## 必要であれば再生前に波形データを生成し、AudioStreamPlayer2D を通じて音を再生する。
+## 再生後、生成された波形データをオーディオバッファにプッシュする。
 func play_sound() -> void:
 
 	# 再生前に波形データが生成されているか確認し、なければ生成する
@@ -99,7 +109,3 @@ func play_sound() -> void:
 		#     printerr("Warning: Not all frames were pushed to the buffer.")
 	else:
 		printerr("Failed to get AudioStreamGeneratorPlayback for key_sound.gd. Sound may not play correctly.")
-
-# _process は現在使用していないため、コメントアウトまたは削除しても良い
-# func _process(delta: float) -> void:
-# 	pass
