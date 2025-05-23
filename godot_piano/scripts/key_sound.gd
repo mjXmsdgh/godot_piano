@@ -87,18 +87,18 @@ func play_sound() -> void:
 	# 再生開始
 	self.play()
 
-	# 1フレーム待機して playback オブジェクトを取得
-	# これにより、play() によって playback が準備されるのを待つ
-	await get_tree().process_frame
-
 	# オーディオストリーム生成プレイバックを取得
+	# play() を呼び出した後、通常はすぐに playback オブジェクトを取得できます。
 	var playback: AudioStreamGeneratorPlayback = get_stream_playback() as AudioStreamGeneratorPlayback
 
 	# playback が正常に取得できたら、生成済みの波形データを一括で書き込む
 	if playback != null:
 		var pushed_frames = playback.push_buffer(wave_data)
+		# pushed_frames は実際に書き込めたフレーム数。wave_data.size() と比較してエラーチェックも可能。
+		# if pushed_frames < wave_data.size():
+		#     printerr("Warning: Not all frames were pushed to the buffer.")
 	else:
-		printerr("Failed to get AudioStreamGeneratorPlayback for key_sound.gd")
+		printerr("Failed to get AudioStreamGeneratorPlayback for key_sound.gd. Sound may not play correctly.")
 
 # _process は現在使用していないため、コメントアウトまたは削除しても良い
 # func _process(delta: float) -> void:
