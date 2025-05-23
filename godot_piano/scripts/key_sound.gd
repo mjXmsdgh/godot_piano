@@ -28,13 +28,20 @@ func _ready() -> void:
 
 # 周波数を設定する関数
 func set_freq(input_freq: float) -> void:
-
-	# 同じ周波数なら何もしない
-	if freq == input_freq:
+	# 周波数が同じで、かつ既に波形が生成済みであれば何もしない
+	if freq == input_freq and is_wave_generated:
 		return
 
-	freq=input_freq
+	# 周波数が変更された場合
+	if freq != input_freq:
+		freq = input_freq
+		# 新しい周波数に対する波形はまだ生成されていないため、フラグをfalseに設定
+		is_wave_generated = false
 
+	# 波形データを生成する（必要な場合）
+	# _generate_wave_data 内の is_wave_generated チェックにより、
+	# 既に適切な波形が生成されていれば再生成はスキップされる。
+	# freq が変更された場合は is_wave_generated が false になっているので必ず生成が試みられる。
 	_generate_wave_data()
 
 
@@ -51,8 +58,8 @@ func _generate_wave_data() -> void:
 	# 正弦波データを生成
 	for i in range(buffer_size):
 		
-		var time: float=float(i) / float(SAMPLE_RATE)
-		var sample_value: float = sin(2.0 * PI * freq * time)
+		var time: float = float(i) / float(SAMPLE_RATE)
+		var sample_value: float = sin(TAU * freq * time) # 2.0 * PI を TAU に置き換え
 		
 		# DURATION秒かけて1.0から0.0に減少
 		var envelope: float=max(0.0,1.0-(time/DURATION))
