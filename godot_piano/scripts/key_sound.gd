@@ -59,15 +59,19 @@ func _generate_wave_data() -> void:
 	for i in range(buffer_size):
 		
 		var time: float = float(i) / float(SAMPLE_RATE)
-		var sample_value: float = sin(TAU * freq * time) # 2.0 * PI を TAU に置き換え
+		# 基本となる正弦波のサンプル値を計算
+		var base_sine_value: float = sin(TAU * freq * time)
 		
-		# DURATION秒かけて1.0から0.0に減少
-		var envelope: float=max(0.0,1.0-(time/DURATION))
-		sample_value*=envelope
+		# エンベロープ（音量の時間変化）を計算
+		# DURATION秒かけて振幅が1.0から0.0に線形に減少する
+		var envelope: float = max(0.0, 1.0 - (time / DURATION))
+		
+		# 正弦波にエンベロープを適用
+		var final_sample_value: float = base_sine_value * envelope
 
 
 		# ステレオなので左右チャンネルに同じ値を入れる
-		wave_data[i] = Vector2(sample_value, sample_value)
+		wave_data[i] = Vector2(final_sample_value, final_sample_value)
 
 	# 生成完了フラグを立てる
 	is_wave_generated = true
