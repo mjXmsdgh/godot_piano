@@ -48,7 +48,7 @@ func _ready() -> void:
 			printerr("Error: Node not found at path: %s for note %s" % [node_path, note_name])
 
 		key_node.set_freq(frequency)
-		key_node.set_keyname(note_name)
+		key_node.set_key_name(note_name)
 		notes[note_name] = key_node
 			
 
