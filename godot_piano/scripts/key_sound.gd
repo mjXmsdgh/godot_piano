@@ -109,3 +109,14 @@ func play_sound() -> void:
 		#     printerr("Warning: Not all frames were pushed to the buffer.")
 	else:
 		printerr("Failed to get AudioStreamGeneratorPlayback for key_sound.gd. Sound may not play correctly.")
+
+
+## 親ノードである key.gd から key_pressed シグナルを受信したときに呼び出される。
+## @param pressed_key_name 発行元のキーの名前 (key.gd から渡される)。
+func _on_key_parent_pressed(pressed_key_name: String) -> void:
+	# この key_sound インスタンスの周波数 (self.freq) は、
+	# 事前に key.gd の set_freq -> self.set_freq によって設定されている想定。
+	# pressed_key_name はログ出力や、より複雑な条件分岐が必要な場合に使用できます。
+	# print("Audio player for '", get_parent().name, "' received key_pressed for '", pressed_key_name, "', playing sound with freq: ", freq)
+	
+	self.play_sound() # 自身の play_sound メソッドを呼び出して音を再生

@@ -56,6 +56,15 @@ func _ready() -> void:
 
 	_update_visuals() # 初期状態に基づいて見た目を設定
 
+	# STEP 5: sound_player (key_sound.gd) が key.gd の key_pressed シグナルを購読するように設定
+	if _is_properly_initialized and sound_player:
+		# sound_player にシグナルハンドラメソッド "_on_key_parent_pressed" を実装する必要があります
+		var target_callable = Callable(sound_player, "_on_key_parent_pressed")
+		if not self.is_connected(SIGNAL_KEY_PRESSED, target_callable):
+			var err = self.connect(SIGNAL_KEY_PRESSED, target_callable)
+			if err != OK:
+				printerr("Key '", name, "': Failed to connect '", SIGNAL_KEY_PRESSED, "' to sound_player._on_key_parent_pressed. Error code: ", err)
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -130,9 +139,6 @@ func play_sound() -> void:
 		printerr("Key '", name, "' is not properly initialized or is disabled. Cannot play sound.")
 		return
 
-	# 音声再生
-	_execute_audio_playback()
-
 	# 見た目の変更は状態遷移と _update_visuals() で処理されるため、
 	# _apply_pressed_visual_state() の直接呼び出しは不要になった。
 	# _apply_pressed_visual_state() 
@@ -144,11 +150,6 @@ func play_sound() -> void:
 
 
 # --- play_soundから呼び出されるヘルパー関数群 ---
-
-func _execute_audio_playback() -> void:
-	"""音声再生を実行します。"""
-	if sound_player: # sound_player の存在は _is_properly_initialized で保証される前提
-		sound_player.play_sound()
 
 func _apply_pressed_visual_state() -> void:
 	"""キーが押された時の見た目に変更します。(現在は _update_visuals で処理)"""
