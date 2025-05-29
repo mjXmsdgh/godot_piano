@@ -179,26 +179,11 @@ func play_sound() -> void:
 		printerr("Key '", name, "' is not properly initialized or is disabled. Cannot play sound.")
 		return
 
-	# 見た目の変更は状態遷移と _update_visuals() で処理されるため、
-	# _apply_pressed_visual_state() の直接呼び出しは不要になった。
-	# _apply_pressed_visual_state()
-
 	# 見た目を元に戻すためのタイマーを開始
 	_initiate_visual_state_reset()
 
 	# 鍵盤が押されたことを示すシグナルを発行
 	emit_signal(SIGNAL_KEY_PRESSED, key_name)
-
-
-## (現在は未使用) キーが押された時の見た目に変更するヘルパー関数。
-## この関数のロジックは _update_visuals に統合されました。
-## 将来的には削除を検討できます。
-func _apply_pressed_visual_state() -> void:
-	# この関数のロジックは _update_visuals に統合されました。
-	# 呼び出し箇所も整理されたため、将来的には削除を検討できます。
-	# if texture_button and texture_button.texture_pressed:
-	# 	texture_button.texture_normal = texture_button.texture_pressed
-	pass
 
 
 ## 鍵盤の見た目を一定時間後に通常状態 (IDLE) に戻すためのタイマーを開始します。
