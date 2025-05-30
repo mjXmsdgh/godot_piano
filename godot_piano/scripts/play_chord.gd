@@ -1,29 +1,12 @@
 extends Node2D
 
+@onready var code_manager: Node = get_node_or_null("../CodeManager")
+@onready var piano_player: Node = get_node_or_null("../")
+@onready var chord_option_button = get_node_or_null("../chord_OptionButton")
 
-var code_manager:Node=null
-var piano_player:Node=null
-var chord_option_button=null
-
-# Called when the node enters the scene tree for the first time.
+# _ready() はノード取得以外の初期化処理がなければ削除できます
 func _ready() -> void:
-	#test()
-	code_manager=get_node_or_null("../CodeManager")
-	piano_player=get_node_or_null("../")
-	chord_option_button=get_node_or_null("../chord_OptionButton")
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
-
-
-
-func test() -> void:
-
-	var test=get_node_or_null("../")
-	test.test_play()
-	#print(test.name)
+	pass # 他に初期化処理がなければこの行も不要
 
 
 func _on_play_chord_pressed() -> void:
