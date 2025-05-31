@@ -24,29 +24,34 @@ var played_notes_buffer: Array[String] = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	# @onready で宣言された変数はここで自動的に初期化されます
-
-	if not piano_keyboard_node:
+	# ピアノキーボードノード
+	if not is_instance_valid(piano_keyboard_node):
 		push_warning("QuestionNode: Piano keyboard node ('../kenban') not found. Key press signals will not be connected.")
 	else:
+		# ピアノキーボードノードの子要素（各キー）を反復処理
 		for key_child: Node in piano_keyboard_node.get_children():
+			# 各キーが "key_pressed" シグナルを持っているか確認します。
 			if key_child.has_signal("key_pressed"):
-				# Godot 4.x スタイルでのシグナル接続
+				# "key_pressed" シグナルを "_on_key_pressed_received" メソッドに接続します。
 				key_child.key_pressed.connect(_on_key_pressed_received)
 
-	if not memory_node:
+	# Memoryノード
+	if not is_instance_valid(memory_node):
 		push_warning("QuestionNode: Memory node ('./Memory') not found. Recall chord signal will not be connected.")
 	else:
+		# Memoryノードが "recall_chord_selected" シグナルを持っているか確認します。
 		if memory_node.has_signal("recall_chord_selected"):
-			# Godot 4.x スタイルでのシグナル接続
+			# "recall_chord_selected" シグナルを "_on_recall_chord_selected" メソッドに接続します。
 			memory_node.recall_chord_selected.connect(_on_recall_chord_selected)
 		else:
 			push_warning("QuestionNode: Memory node does not have 'recall_chord_selected' signal.")
 	
-	if not code_manager:
+	# CodeManagerノード
+	if not is_instance_valid(code_manager):
 		push_warning("QuestionNode: CodeManager node ('../CodeManager') not found. Chord selection might fail.")
 	
-	if not question_label:
+	# 問題表示用ラベルノード
+	if not is_instance_valid(question_label):
 		push_warning("QuestionNode: Question Label node ('$Question') not found. Question text will not be updated.")
 
 	randomize() # 乱数ジェネレータを初期化
