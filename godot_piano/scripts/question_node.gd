@@ -64,50 +64,75 @@ func _process(delta: float) -> void:
 	pass
 
 
+func get_chord_count() -> int:
+	if not is_instance_valid(code_manager):
+		return 0
+
+	return 24#code_manager.get_chord_count() あとで作る
+
+
+
+# プライベートメソッド: コード選択エラー時に状態をリセットする
+func _reset_chord_selection_state() -> void:
+	current_question_chord_name = ""
+	target_chord_notes.clear() # 配列は clear() で空にするのが一般的
+
+
 func select_chord() -> void:
-	if not code_manager:
-		current_question_chord_name = ""
-		target_chord_notes = []
+	if not is_instance_valid(code_manager):
+		_reset_chord_selection_state()
 		push_warning("QuestionNode: Cannot select chord because CodeManager is not available.")
 		return
 
-	# 0から23の中から数字をランダムに選ぶ (マジックナンバー24はリファクタリング計画1.1で定数化を検討)
-	var random_index: int = randi() % 24
-
-	# code_managerからコードを選んでくる
+	var random_index: int = randi() % get_chord_count()
 	if not code_manager.has_method("get_chord_by_index"):
-		current_question_chord_name = ""
-		target_chord_notes = []
+		_reset_chord_selection_state()
 		push_warning("QuestionNode: CodeManager does not have 'get_chord_by_index' method.")
 		return
 
 	var chord_data_pair: Variant = code_manager.get_chord_by_index(random_index)
 
-	# chord_data_pair のnullチェックや期待される構造かの確認 (リファクタリング計画1.2で詳細な堅牢性向上を検討)
-	if chord_data_pair and typeof(chord_data_pair) == TYPE_ARRAY and chord_data_pair.size() == 2:
-		if typeof(chord_data_pair[0]) == TYPE_STRING and \
-		   typeof(chord_data_pair[1]) == TYPE_DICTIONARY and \
-		   (chord_data_pair[1] as Dictionary).has("notes") and \
-		   typeof((chord_data_pair[1] as Dictionary)["notes"]) == TYPE_ARRAY:
-			
-			# コード名
-			current_question_chord_name = chord_data_pair[0] as String
-			# 音 (Array[String]であることを期待)
-			var notes_variant: Variant = (chord_data_pair[1] as Dictionary)["notes"]
-			target_chord_notes.clear()
-			for note_item: Variant in notes_variant as Array: # notes_variant が Array であることを期待
-				if typeof(note_item) == TYPE_STRING:
-					target_chord_notes.append(note_item as String)
-				else:
-					push_warning("QuestionNode: Chord data notes contain non-string element: " + str(note_item))
+	# ガード節: chord_data_pair が不正な場合は早期リターン
+	if not chord_data_pair is Array or chord_data_pair.size() != 2:
+		_reset_chord_selection_state()
+		push_warning("QuestionNode: Failed to retrieve valid chord data pair (not an array or wrong size). Received: " + str(chord_data_pair))
+		return
+
+	# ガード節: コード名が文字列でない場合は早期リターン
+	if not chord_data_pair[0] is String:
+		_reset_chord_selection_state()
+		push_warning("QuestionNode: Chord name in data pair is not a String. Received: " + str(chord_data_pair[0]))
+		return
+
+	# ガード節: コード詳細が辞書でない場合は早期リターン
+	if not chord_data_pair[1] is Dictionary:
+		_reset_chord_selection_state()
+		push_warning("QuestionNode: Chord details in data pair is not a Dictionary. Received: " + str(chord_data_pair[1]))
+		return
+
+	var chord_details: Dictionary = chord_data_pair[1]
+
+	# ガード節: "notes" キーが存在しないか、その値が配列でない場合は早期リターン
+	if not chord_details.has("notes") or not chord_details["notes"] is Array:
+		_reset_chord_selection_state()
+		push_warning("QuestionNode: 'notes' field in chord details is missing or not an Array. Details: " + str(chord_details))
+		return
+
+	# ここまで到達すれば、データの基本構造は期待通り
+	# コード名
+	current_question_chord_name = chord_data_pair[0] # is String で型確認済みなので as String は不要
+	# 音 (Array[String]であることを期待)
+	var notes_variant: Array = chord_details["notes"] # is Array で型確認済み
+
+	target_chord_notes.clear()
+	for note_item: Variant in notes_variant:
+		if note_item is String: # Godot 4.x スタイルでは typeof より is を推奨
+			target_chord_notes.append(note_item) # is String で型確認済みなので as String は不要
 		else:
-			current_question_chord_name = ""
-			target_chord_notes = []
-			push_warning("QuestionNode: Retrieved chord data from CodeManager has unexpected structure. Data: " + str(chord_data_pair))
-	else:
-		current_question_chord_name = ""
-		target_chord_notes = []
-		push_warning("QuestionNode: Failed to retrieve valid chord data pair from CodeManager. Received: " + str(chord_data_pair))
+			push_warning("QuestionNode: Chord data notes contain non-string element: " + str(note_item))
+			# 不正な要素があっても、他の有効な要素は追加を試みる (仕様による)
+
+
 
 
 # Question Buttonが押されたとき
