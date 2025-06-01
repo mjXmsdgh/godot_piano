@@ -189,7 +189,6 @@ func _on_answer_pressed() -> void:
 		return
 
 	for item: String in target_chord_notes:
-		print(item) 
 		piano_keyboard_node.play_note(item)
 
 
@@ -199,15 +198,16 @@ func _on_recall_chord_selected(name: String, notes: Array) -> void: # notes は 
 
 	# notes が Array[String] であることを期待。より堅牢な型チェックと変換を行うことも可能。
 	target_chord_notes.clear()
-	if typeof(notes) == TYPE_ARRAY:
+	if notes is Array: # Godot 4.x スタイル: typeof より is を推奨
 		for note_item: Variant in notes:
-			if typeof(note_item) == TYPE_STRING:
-				target_chord_notes.append(note_item as String)
-			else:
+			# note_item が String でない場合は警告を出して、この要素の処理をスキップ
+			if not note_item is String: # Godot 4.x スタイル: typeof より is を推奨し、条件を反転
 				push_warning("QuestionNode: Recalled notes contain non-string element: " + str(note_item))
+				continue # 次の note_item へ
+			# ここに到達した場合、note_item は String 型
+			target_chord_notes.append(note_item) # is String で型確認済みなので as String は不要
 	else:
 		push_warning("QuestionNode: Recalled notes are not in expected Array format. Received: " + str(notes))
-
 
 	current_question_chord_name = name # リファクタリング計画 2.7 に従い、現在のコード名も更新
 	
