@@ -54,9 +54,21 @@ func _ready() -> void:
 
 
 func play_note(note_name: String) -> void:
-	var key_nodes=notes[note_name]
-	key_nodes.play_sound()
+	if not notes.has(note_name):
+		printerr("KenbanNode: Key '", note_name, "' not found in notes dictionary.")
+		return
 
+	var key_node = notes[note_name]
+	if not is_instance_valid(key_node):
+		printerr("KenbanNode: key_node is not valid for note_name: '", note_name, "'")
+		return
+		
+	if not key_node.has_method("play_sound"):
+		printerr("KenbanNode: key_node '", key_node.name, "' does not have play_sound method.")
+		return
+			
+	key_node.play_sound()
+		
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

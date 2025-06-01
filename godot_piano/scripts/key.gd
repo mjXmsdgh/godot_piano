@@ -176,12 +176,22 @@ func _on_texture_button_button_up() -> void:
 ## この関数は _on_texture_button_button_down から呼び出されます。
 func play_sound() -> void:
 	if not _is_properly_initialized or current_state == KeyState.DISABLED:
-		printerr("Key '", name, "' is not properly initialized or is disabled. Cannot play sound.")
+		printerr("Key '", key_name, "': Cannot play sound. Properly initialized: ", _is_properly_initialized, ", Current state: ", KeyState.keys()[current_state]) # DEBUG
 		return
-
+	
+	# --- プログラムからの呼び出し時に状態と見た目を更新 ---
+	# _on_answer_pressed などから呼ばれた場合、current_state が KeyState.IDLE のままの可能性があります。
+	# UI操作(_on_texture_button_button_down)では、この play_sound() の呼び出し前に
+	# current_state = KeyState.PRESSED と _update_visuals() が実行されます。
+	# プログラムからの呼び出しでも同様の処理を行うために、ここで状態を更新します。
+	if current_state != KeyState.PRESSED: # UI経由でない場合、または既にPRESSEDでない場合
+		current_state = KeyState.PRESSED
+		_update_visuals() # 見た目を更新
+	# --- ここまでが状態と見た目の更新処理 ---
+	
 	# 見た目を元に戻すためのタイマーを開始
 	_initiate_visual_state_reset()
-
+	
 	# 鍵盤が押されたことを示すシグナルを発行
 	emit_signal(SIGNAL_KEY_PRESSED, key_name)
 
