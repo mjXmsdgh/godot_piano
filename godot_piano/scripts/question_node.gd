@@ -20,6 +20,7 @@ var played_notes_buffer: Array[String] = []
 @onready var memory_node: Node = get_node_or_null("./Memory")
 # 問題表示用ラベルへの参照 (インスペクタで $Question が Label ノードであることを確認してください)
 @onready var question_label: Label = $Question
+var _is_code_manager_initialized_successfully: bool = false # CodeManagerが正常に初期化されたかのフラグ
 
 
 # Called when the node enters the scene tree for the first time.
@@ -49,7 +50,10 @@ func _ready() -> void:
 	# CodeManagerノード
 	if not is_instance_valid(code_manager):
 		push_warning("QuestionNode: CodeManager node ('../CodeManager') not found. Chord selection might fail.")
-	
+		_is_code_manager_initialized_successfully = false
+	else:
+		_is_code_manager_initialized_successfully = true
+
 	# 問題表示用ラベルノード
 	if not is_instance_valid(question_label):
 		push_warning("QuestionNode: Question Label node ('$Question') not found. Question text will not be updated.")
@@ -79,12 +83,14 @@ func _reset_chord_selection_state() -> void:
 
 
 func select_chord() -> void:
-	if not is_instance_valid(code_manager):
+	# _ready() での CodeManager の初期化結果を確認する
+	if not _is_code_manager_initialized_successfully:
 		_reset_chord_selection_state()
-		push_warning("QuestionNode: Cannot select chord because CodeManager is not available.")
+		push_warning("QuestionNode: Cannot select chord because CodeManager was not properly initialized or is missing.")
 		return
 
-	var random_index: int = randi() % get_chord_count()
+	var random_index: int = randi() % get_chord_count() # get_chord_count() は内部で is_instance_valid(code_manager) をチェックしています
+
 	if not code_manager.has_method("get_chord_by_index"):
 		_reset_chord_selection_state()
 		push_warning("QuestionNode: CodeManager does not have 'get_chord_by_index' method.")
@@ -148,10 +154,9 @@ func _on_button_pressed() -> void:
 								  # 現状はコメントアウトしています。
 
 
-# プレイヤーが押したコードがターゲットと一致するかチェックする (リファクタリング計画 4.2: 関数名を変更)
+# プレイヤーが押したコードがターゲットと一致するかチェックする 
 func check_played_chord_against_target() -> void:
-	# 構成音の最小数を3と仮定 (このマジックナンバー3はリファクタリング計画で定数化を検討)
-	# または、target_chord_notes.size() と比較する方がより一般的です (計画2.4で検討)
+	# 構成音の最小数を3と仮定 
 	if played_notes_buffer.size() < 3:
 		return
 
@@ -174,7 +179,6 @@ func _on_key_pressed_received(pressed_key_name: String) -> void:
 
 # Answer Button が押されたときの処理
 func _on_answer_pressed() -> void:
-	print("----------------") # デバッグ用出力 (リファクタリング計画2.6で整理対象)
 
 	if not piano_keyboard_node:
 		push_warning("QuestionNode: Cannot play answer because Piano keyboard node is not found.")
@@ -185,7 +189,7 @@ func _on_answer_pressed() -> void:
 		return
 
 	for item: String in target_chord_notes:
-		print(item) # デバッグ用出力 (リファクタリング計画2.6で整理対象)
+		print(item) 
 		piano_keyboard_node.play_note(item)
 
 
