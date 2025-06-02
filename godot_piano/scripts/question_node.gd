@@ -28,13 +28,13 @@ func _ready() -> void:
 	# ピアノキーボードノード
 	if not is_instance_valid(piano_keyboard_node):
 		push_warning("QuestionNode: Piano keyboard node ('../kenban') not found. Key press signals will not be connected.")
-	else:
+	#else:
 		# ピアノキーボードノードの子要素（各キー）を反復処理
-		for key_child: Node in piano_keyboard_node.get_children():
+		#for key_child: Node in piano_keyboard_node.get_children():
 			# 各キーが "key_pressed" シグナルを持っているか確認します。
-			if key_child.has_signal("key_pressed"):
+			#if key_child.has_signal("key_pressed"):
 				# "key_pressed" シグナルを "_on_key_pressed_received" メソッドに接続します。
-				key_child.key_pressed.connect(_on_key_pressed_received)
+				#key_child.key_pressed.connect(_on_key_pressed_received)
 
 	# Memoryノード
 	if not is_instance_valid(memory_node):
@@ -152,29 +152,6 @@ func _on_button_pressed() -> void:
 	
 	# played_notes_buffer.clear() # ボタンが押された時にクリアするかは、ゲームの仕様によります。
 								  # 現状はコメントアウトしています。
-
-
-# プレイヤーが押したコードがターゲットと一致するかチェックする 
-func check_played_chord_against_target() -> void:
-	# 構成音の最小数を3と仮定 
-	if played_notes_buffer.size() < 3:
-		return
-
-	var sorted_played: Array[String] = played_notes_buffer.duplicate()
-	sorted_played.sort() # 文字列としてソート
-	var sorted_target: Array[String] = target_chord_notes.duplicate()
-	sorted_target.sort() # 文字列としてソート
-
-	if sorted_played == sorted_target:
-		print("OK") # UIへのフィードバックはリファクタリング計画2.5で改善を検討
-	else:
-		print("NG") # UIへのフィードバックはリファクタリング計画2.5で改善を検討
-		
-
-# key.gd から key_pressed シグナルを受信したときに呼び出される関数
-func _on_key_pressed_received(pressed_key_name: String) -> void:
-	played_notes_buffer.append(pressed_key_name)
-	check_played_chord_against_target()
 
 
 # Answer Button が押されたときの処理
