@@ -1,5 +1,5 @@
+# 音楽コード当てクイズの問題を管理するノード
 extends Node2D
-
 
 # CodeManagerへの参照
 @onready var code_manager: Node = get_node_or_null("../CodeManager")
@@ -13,12 +13,12 @@ var played_notes_buffer: Array[String] = []
 # ピアノキーボードノードへの参照
 @onready var piano_keyboard_node: Node = get_node_or_null("../kenban")
 
-# 問題表示用ラベルへの参照 (インスペクタで $Question が Label ノードであることを確認してください)
+# 問題表示用ラベルへの参照
 @onready var question_label: Label = $Question
 
 var _is_code_manager_initialized_successfully: bool = false # CodeManagerが正常に初期化されたかのフラグ
 
-
+# 初期化処理
 func _ready() -> void:
 	# ピアノキーボードノード
 	if not is_instance_valid(piano_keyboard_node):
@@ -40,23 +40,24 @@ func _ready() -> void:
 	randomize() # 乱数ジェネレータを初期化
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+# 毎フレーム呼び出される処理 (現在は未使用)
 func _process(delta: float) -> void:
 	pass
 
 
+# 利用可能なコードの総数を取得する
 func get_chord_count() -> int:
 	if not is_instance_valid(code_manager):
 		return 0
+	# TODO: 将来的にはCodeManagerから動的に取得する
+	return 24 #現在は固定値
 
-	return 24#code_manager.get_chord_count() あとで作る
-
-# プライベートメソッド: コード選択エラー時に状態をリセットする
+# コード選択に関する状態をリセットする
 func _reset_chord_selection_state() -> void:
 	current_question_chord_name = ""
 	target_chord_notes.clear() # 配列は clear() で空にするのが一般的
 
-
+# ランダムにコードを選択し、問題として設定する
 func select_chord() -> void:
 
 	var random_index: int = randi() % get_chord_count() # get_chord_count() は内部で is_instance_valid(code_manager) をチェックしています
@@ -76,14 +77,12 @@ func select_chord() -> void:
 			target_chord_notes.append(note_item)
 
 
-# Question Buttonが押されたとき
+# 「問題表示」ボタンが押されたときの処理
 func _on_button_pressed() -> void:
 	select_chord()
 	question_label.text = current_question_chord_name
 
-
-
-# Answer Button が押されたときの処理
+# 「答え表示」ボタンが押されたときの処理
 func _on_answer_pressed() -> void:
 
 	for item: String in target_chord_notes:
