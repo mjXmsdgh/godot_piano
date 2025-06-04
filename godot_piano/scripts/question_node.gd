@@ -54,36 +54,51 @@ func get_chord_count() -> int:
 
 # コード選択に関する状態をリセットする
 func _reset_chord_selection_state() -> void:
+	# 現在の問題のコード名を空文字列にリセットする。
 	current_question_chord_name = ""
+	# 現在の問題のターゲットコードの構成音の配列を空にする。
 	target_chord_notes.clear() # 配列は clear() で空にするのが一般的
 
-# ランダムにコードを選択し、問題として設定する
 func select_chord() -> void:
 
-	var random_index: int = randi() % get_chord_count() # get_chord_count() は内部で is_instance_valid(code_manager) をチェックしています
+	# 利用可能なコードの総数に基づいてランダムなインデックスを生成する。
+	var random_index: int = randi() % get_chord_count() 
 
+	# CodeManagerからランダムなインデックスに対応するコードデータを取得する。
+	# chord_data_pair は [コード名, コード詳細の辞書] という形式のVariant。
 	var chord_data_pair: Variant = code_manager.get_chord_by_index(random_index)
 
+	# コードデータのペアからコード詳細の辞書を取得する。
 	var chord_details: Dictionary = chord_data_pair[1]
 
-	# コード名
+	# コードデータのペアからコード名を取得し、現在の問題のコード名として設定する。
 	current_question_chord_name = chord_data_pair[0]
-	# 音 (Array[String]であることを期待)
-	var notes_variant: Array = chord_details["notes"] # is Array で型確認済み
+	
+	# コード詳細の辞書から "notes" キーで構成音の配列を取得する。
+	var notes_variant: Array = chord_details["notes"]
 
+	# 以前のターゲットコードの構成音をクリアする。
 	target_chord_notes.clear()
+
+	# 取得した構成音の配列をループし、各音をターゲットコードの構成音として追加する。
+	# 型安全のため、要素がString型であることを確認する。
 	for note_item: Variant in notes_variant:
 		if note_item is String:
 			target_chord_notes.append(note_item)
 
-
 # 「問題表示」ボタンが押されたときの処理
 func _on_button_pressed() -> void:
+	
+	# 新しいコードを選択して問題として設定する。
 	select_chord()
+
+	# 問題表示ラベルに現在の問題のコード名を表示する。
 	question_label.text = current_question_chord_name
 
 # 「答え表示」ボタンが押されたときの処理
 func _on_answer_pressed() -> void:
 
+	# ターゲットコードの構成音を順番に取得する。
 	for item: String in target_chord_notes:
+		# 各構成音をピアノキーボードで再生する。
 		piano_keyboard_node.play_note(item)
