@@ -31,3 +31,12 @@ func populate_chord_options() -> void:
 	# アイテムが存在すれば、最初のアイテムをデフォルトで選択します。
 	if self.item_count > 0:
 		self.select(0)
+
+
+# 選択されているコード名を返す関数
+func get_selected_chord_name() -> String:
+
+	if self.selected == -1: # 何かアイテムが選択されていないか確認
+		return "" # 何も選択されていない場合は空文字を返す
+
+	return self.get_item_text(self.selected) # 選択されているアイテムのテキストを返す
