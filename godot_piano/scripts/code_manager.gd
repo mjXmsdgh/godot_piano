@@ -95,3 +95,18 @@ func get_chord_by_index(index: int):
 	var selected_key = chord_keys[index] # インデックスに対応するキーを取得
 
 	return [selected_key,chord_data[selected_key]]      # キーを使ってコードデータを取得して返す
+
+
+# 指定されたコード名に対応する音(ノート)の配列を返す関数
+# 例: "C" を渡すと ["C4", "E4", "G4"] のような配列を返す
+# コード名が見つからない場合や、データが期待する形式でない場合は空の配列を返す
+func get_notes_by_chord_name(chord_name: String) -> Array:
+	if not chord_data.has(chord_name):
+		printerr("エラー: コード名 '%s' が chord_data に見つかりません。" % chord_name)
+		return []
+
+	var chord_entry_data  = chord_data[chord_name]
+
+	var notes_array=chord_entry_data["notes"]
+	
+	return notes_array
