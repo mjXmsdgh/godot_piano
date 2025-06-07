@@ -18,9 +18,11 @@ func _process(delta: float) -> void:
 
 
 func _on_pressed() -> void:
-
+	# ボタンが押された時の処理
+	# 選択されているコード名を取得
 	var selected_chord_name: String = select_chord_list.get_selected_chord_name()
+	# コード名に対応する音符の配列を取得
 	var notes_to_play:Array = code_manager.get_notes_by_chord_name(selected_chord_name)
-
+	# 各音符を再生
 	for note in notes_to_play:
 		kenban.play_note(note)
