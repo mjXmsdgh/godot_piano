@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://c5n6iq7qnnxxc"]
 
 [ext_resource type="PackedScene" uid="uid://54b4gysqftl3" path="res://scenes/kenban.tscn" id="1_bdthf"]
-[ext_resource type="PackedScene" uid="uid://2jtchecwew7c" path="res://scenes/code_manager.tscn" id="2_sv5co"]
+[ext_resource type="PackedScene" uid="uid://2jtchecwew7c" path="res://scenes/chord_manager.tscn" id="2_r1xel"]
 [ext_resource type="Script" path="res://scripts/select_chord_list.gd" id="3_bp278"]
 [ext_resource type="Script" path="res://scripts/play_button.gd" id="4_jd3yb"]
 
@@ -9,7 +9,7 @@
 
 [node name="kenban" parent="." instance=ExtResource("1_bdthf")]
 
-[node name="CodeManager" parent="." instance=ExtResource("2_sv5co")]
+[node name="ChordManager" parent="." instance=ExtResource("2_r1xel")]
 
 [node name="SelectChordList" type="OptionButton" parent="."]
 offset_left = 258.0

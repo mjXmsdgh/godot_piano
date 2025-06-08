@@ -1,7 +1,7 @@
 extends OptionButton
 
 # CodeManagerノードへの参照。
-@onready var code_manager: Node = get_node("../CodeManager")
+@onready var code_manager: Node = get_node("../ChordManager")
 
 
 # Called when the node enters the scene tree for the first time.

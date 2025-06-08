@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_8wbcg"]
 [ext_resource type="PackedScene" uid="uid://54b4gysqftl3" path="res://scenes/kenban.tscn" id="2_35tyj"]
 [ext_resource type="Script" path="res://scripts/play_chord.gd" id="3_frav0"]
-[ext_resource type="PackedScene" uid="uid://2jtchecwew7c" path="res://scenes/code_manager.tscn" id="4_dmnxa"]
+[ext_resource type="PackedScene" uid="uid://2jtchecwew7c" path="res://scenes/chord_manager.tscn" id="4_dmnxa"]
 [ext_resource type="Script" path="res://scripts/chord_option_button.gd" id="5_d6158"]
 
 [node name="play_chord" type="Node2D"]
