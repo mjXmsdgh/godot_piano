@@ -2,8 +2,8 @@ extends Button
 
 
 @onready var select_chord_list:Node =get_node_or_null("../SelectChordList")
-@onready var kenban:Node=get_node_or_null("../kenban")
-@onready var code_manager:Node=get_node_or_null("../ChordManager")
+@onready var kenban:Node=get_node_or_null("../../kenban")
+@onready var code_manager:Node=get_node_or_null("../../ChordManager")
 
 
 

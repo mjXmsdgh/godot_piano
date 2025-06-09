@@ -11,14 +11,16 @@
 
 [node name="ChordManager" parent="." instance=ExtResource("2_r1xel")]
 
-[node name="SelectChordList" type="OptionButton" parent="."]
+[node name="PlayChord" type="Node2D" parent="."]
+
+[node name="SelectChordList" type="OptionButton" parent="PlayChord"]
 offset_left = 258.0
 offset_top = 158.0
 offset_right = 290.0
 offset_bottom = 178.0
 script = ExtResource("3_bp278")
 
-[node name="PlayButton" type="Button" parent="."]
+[node name="PlayButton" type="Button" parent="PlayChord"]
 offset_left = 148.0
 offset_top = 153.0
 offset_right = 189.0
@@ -26,4 +28,4 @@ offset_bottom = 184.0
 text = "Play"
 script = ExtResource("4_jd3yb")
 
-[connection signal="pressed" from="PlayButton" to="PlayButton" method="_on_pressed"]
+[connection signal="pressed" from="PlayChord/PlayButton" to="PlayChord/PlayButton" method="_on_pressed"]
