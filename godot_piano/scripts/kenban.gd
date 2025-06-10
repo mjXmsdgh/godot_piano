@@ -74,3 +74,7 @@ func play_note(note_name: String) -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+
+
+func _on_answer_pressed() -> void:
+	pass # Replace with function body.
