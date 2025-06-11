@@ -35,4 +35,3 @@ offset_bottom = 218.0
 text = "Answer"
 
 [connection signal="pressed" from="QuestionNode/QuestionButton" to="QuestionNode" method="_on_question_button_pressed"]
-[connection signal="pressed" from="QuestionNode/answer" to="kenban" method="_on_answer_pressed"]
