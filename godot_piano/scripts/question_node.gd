@@ -147,3 +147,9 @@ func evaluate_answer() -> void:
 	user_played_notes.clear() # 評価後、ユーザーの入力をクリア
 	# current_interaction_state = QuizInteractionState.AWAITING_INPUT # すぐに次の入力を待つ場合
 	current_interaction_state = QuizInteractionState.INITIAL # 問題選択に戻る場合
+
+# 答えボタンが押されたとき
+func _on_answer_pressed() -> void:
+
+	for item in current_target_chord_notes:
+		piano_keyboard_node.play_note(item)

@@ -50,7 +50,6 @@ func _ready() -> void:
 		key_node.set_freq(frequency)
 		key_node.set_key_name(note_name)
 		notes[note_name] = key_node
-			
 
 
 func play_note(note_name: String) -> void:
