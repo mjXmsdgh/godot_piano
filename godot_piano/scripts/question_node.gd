@@ -8,7 +8,7 @@ extends Node2D
 @onready var piano_keyboard_node: Node = get_node_or_null("../kenban")
 
 # 問題表示用ラベルへの参照
-@onready var question_label: Label = $Question
+@onready var question_label: Label = $QuestionLabel
 
 var target_chord="C"
 var current_target_chord_name: String = ""
@@ -119,9 +119,9 @@ func _on_individual_key_pressed(note_name: String) -> void:
 
 # 回答を評価する関数
 func evaluate_answer() -> void:
-	print("Evaluating answer...")
-	print("Target notes: ", current_target_chord_notes)
-	print("User played notes: ", user_played_notes)
+	#print("Evaluating answer...")
+	#print("Target notes: ", current_target_chord_notes)
+	#print("User played notes: ", user_played_notes)
 
 	# 簡単な比較ロジック (順序を問わず、構成音が一致するか)
 	var is_correct = false
@@ -136,9 +136,12 @@ func evaluate_answer() -> void:
 	if is_correct:
 		print("Correct!")
 		# question_label.text = "正解！ 次の問題へ" # 例
+		$StatusLabel.text="Correct"
 	else:
 		print("Incorrect. Try again.")
 		# question_label.text = "残念！ 正解は %s でした。" % str(current_target_chord_notes) # 例
+		$StatusLabel.text="Incorrect. Try again."
+
 
 	# 次のインタラクションの準備
 	user_played_notes.clear() # 評価後、ユーザーの入力をクリア

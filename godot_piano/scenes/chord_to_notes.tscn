@@ -20,7 +20,7 @@ offset_right = 90.0
 offset_bottom = 220.0
 text = "Question"
 
-[node name="Question" type="Label" parent="QuestionNode"]
+[node name="QuestionLabel" type="Label" parent="QuestionNode"]
 offset_left = 108.0
 offset_top = 188.0
 offset_right = 148.0
@@ -33,5 +33,11 @@ offset_top = 187.0
 offset_right = 240.0
 offset_bottom = 218.0
 text = "Answer"
+
+[node name="StatusLabel" type="Label" parent="QuestionNode"]
+offset_left = 153.0
+offset_top = 254.0
+offset_right = 193.0
+offset_bottom = 277.0
 
 [connection signal="pressed" from="QuestionNode/QuestionButton" to="QuestionNode" method="_on_question_button_pressed"]
