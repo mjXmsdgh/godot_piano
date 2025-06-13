@@ -119,9 +119,6 @@ func _on_individual_key_pressed(note_name: String) -> void:
 
 # 回答を評価する関数
 func evaluate_answer() -> void:
-	#print("Evaluating answer...")
-	#print("Target notes: ", current_target_chord_notes)
-	#print("User played notes: ", user_played_notes)
 
 	# 簡単な比較ロジック (順序を問わず、構成音が一致するか)
 	var is_correct = false
@@ -134,12 +131,8 @@ func evaluate_answer() -> void:
 			is_correct = true
 
 	if is_correct:
-		print("Correct!")
-		# question_label.text = "正解！ 次の問題へ" # 例
 		$StatusLabel.text="Correct"
 	else:
-		print("Incorrect. Try again.")
-		# question_label.text = "残念！ 正解は %s でした。" % str(current_target_chord_notes) # 例
 		$StatusLabel.text="Incorrect. Try again."
 
 
