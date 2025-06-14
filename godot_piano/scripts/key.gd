@@ -32,7 +32,6 @@ const DEFAULT_KEY_NAME := "none"                      # 初期化時または未
 # 鍵盤の状態
 var original_texture_normal: Texture2D # TextureButton の通常状態のテクスチャを保持
 var key_name: String = DEFAULT_KEY_NAME  # この鍵盤に割り当てられた名前 (例: "C4", "D#5")
-var _is_properly_initialized := true   # 必須ノードが全て見つかり、初期化が正常に完了したかを示すフラグ
 
 ## 鍵盤の現在の状態を表す列挙型
 enum KeyState { IDLE, PRESSED, DISABLED }
@@ -52,45 +51,29 @@ func _ready() -> void:
 	# TextureButton の存在確認と初期テクスチャの保存
 	if texture_button == null:
 		missing_dependencies_messages.append("TextureButton ('%s') not found." % TEXTURE_BUTTON_NODE_PATH)
-		_is_properly_initialized = false
 	else:
 		original_texture_normal = texture_button.texture_normal
 
 	# AudioStreamPlayer2D の存在確認
 	if sound_player == null:
 		missing_dependencies_messages.append("AudioStreamPlayer2D ('%s') not found." % AUDIO_PLAYER_NODE_PATH)
-		_is_properly_initialized = false
 
 	# Timer の存在確認
 	if reset_timer == null:
 		missing_dependencies_messages.append("Timer ('%s') not found." % RESET_TIMER_NODE_PATH)
-		_is_properly_initialized = false
 
-	# 初期化に失敗した場合の処理
-	if not _is_properly_initialized:
-		var error_message = "Key '%s' initialization failed. Missing dependencies: [%s]. Key functionality will be affected." \
-							% [name, ", ".join(missing_dependencies_messages)]
-		printerr(error_message)
-		current_state = KeyState.DISABLED # 鍵盤を無効状態にする
-		if texture_button: # TextureButton自体は存在する場合
-			texture_button.tooltip_text = "キーが正しく設定されていません。"
-	else:
-		# 初期化成功時の処理
-		current_state = KeyState.IDLE
-		if texture_button:
-			texture_button.tooltip_text = "" # エラーツールチップをクリア
+	current_state = KeyState.IDLE
+	if texture_button:
+		texture_button.tooltip_text = "" # エラーツールチップをクリア
 
 	_update_visuals() # 初期状態に基づいて見た目を設定
 
-	# sound_player がこの鍵盤の key_pressed シグナルを購読するように設定します。
-	# これにより、鍵盤が押されたときに sound_player 側のメソッドが呼び出されます。
-	if _is_properly_initialized and sound_player:
-		# sound_player にシグナルハンドラメソッド "_on_key_parent_pressed" を実装する必要があります
-		var target_callable = Callable(sound_player, "_on_key_parent_pressed")
-		if not self.is_connected(SIGNAL_KEY_PRESSED, target_callable):
-			var err = self.connect(SIGNAL_KEY_PRESSED, target_callable)
-			if err != OK:
-				printerr("Key '", name, "': Failed to connect '", SIGNAL_KEY_PRESSED, "' to sound_player._on_key_parent_pressed. Error code: ", err)
+	# sound_player にシグナルハンドラメソッド "_on_key_parent_pressed" を実装する必要があります
+	var target_callable = Callable(sound_player, "_on_key_parent_pressed")
+
+	if not self.is_connected(SIGNAL_KEY_PRESSED, target_callable):
+		var err = self.connect(SIGNAL_KEY_PRESSED, target_callable)
+
 
 
 ## 毎フレーム呼び出されます。'delta' は前のフレームからの経過時間です。
@@ -136,18 +119,7 @@ func _update_visuals() -> void:
 ## この関数は sound_player (AudioStreamPlayer2D) の set_freq メソッドを呼び出します。
 ## @param input_freq 設定する周波数 (float)
 func set_freq(input_freq: float) -> void:
-	if not _is_properly_initialized: # 初期化失敗時は設定不可
-		printerr("Cannot set frequency for key '", name, "'; key is not properly initialized.")
-		return
-	if current_state == KeyState.DISABLED: # 無効状態でも設定不可
-		printerr("Cannot set frequency for key '", name, "'; key is disabled.")
-		return
-
-	if sound_player:
-		sound_player.set_freq(input_freq)
-	else:
-		# このエラーは _is_properly_initialized チェックでカバーされるはず
-		printerr("Sound player not available to set frequency for key '", name, "', even after initial checks.")
+	sound_player.set_freq(input_freq)
 
 ## この鍵盤の名前 (識別子) を設定します。
 ## @param input_key_name 設定するキー名 (String)
@@ -158,12 +130,11 @@ func set_key_name(input_key_name: String) -> void:
 ## 鍵盤が押されたときの処理を開始します。
 func _on_texture_button_button_down() -> void:
 	if current_state == KeyState.DISABLED:
-		return # 無効状態なら何もしない
+		return 
 
 	current_state = KeyState.PRESSED
 	_update_visuals()
-	play_sound() # play_sound は音声再生とタイマー開始を処理
-	# SIGNAL_KEY_PRESSED シグナルは play_sound() 内で発行されます。
+	play_sound()
 
 
 ## TextureButton の "button_up" シグナルに接続されるコールバック関数。
@@ -172,26 +143,17 @@ func _on_texture_button_button_down() -> void:
 func _on_texture_button_button_up() -> void:
 	pass # 必要に応じて、キーが離された瞬間の処理をここに追加できます。
 
-## 鍵盤の音を再生し、関連する処理（見た目のリセットタイマー開始、シグナル発行）を行います。
-## この関数は _on_texture_button_button_down から呼び出されます。
+## 音を再生し、鍵盤の状態を更新してシグナルを発行します。
 func play_sound() -> void:
-	if not _is_properly_initialized or current_state == KeyState.DISABLED:
-		printerr("Key '", key_name, "': Cannot play sound. Properly initialized: ", _is_properly_initialized, ", Current state: ", KeyState.keys()[current_state]) # DEBUG
-		return
-	
-	# --- プログラムからの呼び出し時に状態と見た目を更新 ---
-	# _on_answer_pressed などから呼ばれた場合、current_state が KeyState.IDLE のままの可能性があります。
-	# UI操作(_on_texture_button_button_down)では、この play_sound() の呼び出し前に
-	# current_state = KeyState.PRESSED と _update_visuals() が実行されます。
-	# プログラムからの呼び出しでも同様の処理を行うために、ここで状態を更新します。
-	if current_state != KeyState.PRESSED: # UI経由でない場合、または既にPRESSEDでない場合
+
+	# 鍵盤がまだ押下状態でなければ、状態を更新し見た目を変更
+	if current_state != KeyState.PRESSED: 
 		current_state = KeyState.PRESSED
-		_update_visuals() # 見た目を更新
-	# --- ここまでが状態と見た目の更新処理 ---
-	
-	# 見た目を元に戻すためのタイマーを開始
+		_update_visuals()
+
+	# 鍵盤の見た目を一定時間後に元に戻すタイマーを開始
 	_initiate_visual_state_reset()
-	
+
 	# 鍵盤が押されたことを示すシグナルを発行
 	emit_signal(SIGNAL_KEY_PRESSED, key_name)
 
