@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dqhanjq5k13xm"
+
+[deps]
+
+files=["res://assets/diatonic_chord_list.degree.translation", "res://assets/diatonic_chord_list.chord.translation", "res://assets/diatonic_chord_list.function.translation"]
+
+source_file="res://assets/diatonic_chord_list.csv"
+dest_files=["res://assets/diatonic_chord_list.degree.translation", "res://assets/diatonic_chord_list.chord.translation", "res://assets/diatonic_chord_list.function.translation"]
+
+[params]
+
+compress=true
+delimiter=0

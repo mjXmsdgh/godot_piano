@@ -9,6 +9,12 @@ var target_number: int
 # 生成されたコード進行
 var generated_chords: Array[String] = [] 
 
+
+var diatonic_chord_list: Array[Dictionary] = [] # 格納するデータ構造に合わせて型を Array[Dictionary] に変更
+
+
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 
@@ -16,8 +22,64 @@ func _ready() -> void:
 	target_key="C"
 	target_number=4
 
-	generate_chord()
+	# chord_listを読み込む
+	load_chord_list()
+
+	#generate_chord()
 	pass # Replace with function body.
+
+
+func load_chord_list() -> void:
+	# 0. diatonic_chord_list をクリアする (もし複数回呼び出される可能性がある場合)
+	diatonic_chord_list.clear()
+
+	# 1. CSVファイルのパスを定義する
+	var file_path = "res://assets/diatonic_chord_list.csv"
+
+	# 2. FileAccess を使用してCSVファイルを開く
+	var file = FileAccess.open(file_path, FileAccess.READ)
+
+	# 3. ファイルが正しく開けたか確認する
+	if FileAccess.get_open_error() != OK:
+		printerr("Failed to open diatonic_chord_list.csv: ", FileAccess.get_open_error())
+		return
+
+	# 4. ファイルを1行ずつ読み込むループ
+	while not file.eof_reached():
+		
+		# CSVの1行を配列として取得
+		var line: PackedStringArray = file.get_csv_line() 
+
+		# 5. ヘッダー行をスキップする
+		if is_header_row(line):
+			continue
+
+		# 6. データ行の列数を確認 (キー, ディグリー, コード名, 機能名の最低4列を期待)
+		if line.size() < 4:
+			printerr("Skipping malformed CSV data line (expected at least 4 columns, got %s): %s" % [line.size(), str(line)])
+			continue
+
+		var key = line[0]
+		var degree = line[1]
+		var chord_name = line[2]
+		var function_name = line[3]
+	
+		diatonic_chord_list.append({ "key": key, "degree": degree, "chord_name": chord_name, "function_name": function_name })
+
+
+	# 7. ファイルを閉じる
+	file.close()
+	
+
+func is_header_row(line: Array[String]) -> bool:
+
+	# lineが空でないこと、かつ最初の要素が文字列で、"#"で始まるかを確認
+	if not line.is_empty() and line[0] is String and line[0].begins_with("#"):
+		return true
+	else:
+		return false
+
+	
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -77,7 +139,7 @@ func generate_chord() -> void:
 	print("生成されたコード（仮）: ", generated_chords)
 
 
-func get_function_of(chord: String) -> String:
+func get_function_of(chord: String) -> void:
 	# 処理の概要: 与えられたコード名が、現在のキーにおいてどのような機能（トニック、サブドミナント、ドミナント）を持つかを判定する。
 
 	# 1. 現在の `target_key` に基づいて、そのキーのダイアトニックコードと各機能（T, SD, D）の対応関係を準備する。

@@ -1,4 +1,4 @@
-key,degree,chord,function
+#key,degree,chord,function
 C,I,C,T
 C,ii,Dm,SD
 C,iii,Em,-
@@ -93,4 +93,3 @@ B,IV,E,SD
 B,V,F#,D
 B,vi,G#m,T
 B,vii°,A#°,D
-
