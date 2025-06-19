@@ -25,7 +25,10 @@ func _ready() -> void:
 	# chord_listを読み込む
 	load_chord_list()
 
-	#generate_chord()
+	# 確認用の表示
+	#display_diatonic_chord_list()
+
+	generate_chord()
 	pass # Replace with function body.
 
 
@@ -79,7 +82,9 @@ func is_header_row(line: Array[String]) -> bool:
 	else:
 		return false
 
-	
+func display_diatonic_chord_list() -> void:
+	for item in diatonic_chord_list:
+		print(item)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -96,63 +101,46 @@ func set_target_number(number: int) -> void:
 
 
 func generate_chord() -> void:
-	generated_chords.clear() # 前回生成されたコードをクリア
+	generated_chords.clear() # 前回生成されたコード進行をクリア
 
-	# --- ここからコード生成ロジックの骨子 ---
+	# --- コード生成ロジック ---
 
-	# 1. キーに応じたダイアトニックコードと機能の準備
-	#    例: target_key が "C" の場合
-	var tonic_chords = ["C", "Am"] #(I, vi)
-	var subdominant_chords = ["Dm", "F"] #(ii, IV)
-	var dominant_chords = ["G", "Bm(b5)"] #(V, viiø) ※セブンスも考慮可 G7など
-	#    (この部分は別途データ構造やヘルパー関数で管理すると良いでしょう)
-	#var _tonic_chords: Array[String] = [] # 仮
-	#var _subdominant_chords: Array[String] = [] # 仮
-	#var _dominant_chords: Array[String] = [] # 仮
+	# 1. `target_key` に基づいてダイアトニックコードをフィルタリング:
+	#    - `diatonic_chord_list` から、現在の `target_key` に一致するコードのみを抽出する。
+	#    - 抽出したコードを、機能（トニック(T), サブドミナント(SD), ドミナント(D)など）ごとに分類しておく。
+	#      例: `tonic_chords_in_key`, `subdominant_chords_in_key`, `dominant_chords_in_key` のような配列や辞書を作成する。
+	var tonic_chords_in_key: Array[String] = []
+	var subdominant_chords_in_key: Array[String] = []
+	var dominant_chords_in_key: Array[String] = []
 
-	# (仮のデータ設定 - 実際には target_key に基づいて設定する)
-	#if target_key == "C": # この部分は後でちゃんと実装
-	#	_tonic_chords = ["C", "Am"]
-	#	_subdominant_chords = ["Dm", "F"]
-	#	_dominant_chords = ["G", "Bm(b5)"]
-	#else:
-#		return
+	for chord in diatonic_chord_list:
+		if chord["key"] == target_key:
+			if chord["function_name"] == "T":
+				tonic_chords_in_key.append(chord["chord_name"])
+			elif chord["function_name"] == "SD":
+				subdominant_chords_in_key.append(chord["chord_name"])
+			elif chord["function_name"] == "D":
+				dominant_chords_in_key.append(chord["chord_name"])
 
-	# 2. 最初のコードを設定 (通常はトニック I)
-	generated_chords.append(tonic_chords[0]) # 例: "C"
 
-	# 3. 2番目以降のコードを target_number に達するまで生成
+	# 2. コード進行の開始コードを選択:
+	#    - 一般的に、コード進行はトニック(T)から始まることが多い。
+	#    - `tonic_chords_in_key` の中からランダムに1つ、または主要なトニックコード（例: I度）を選択し、`generated_chords` に追加する。
+
+	var start_chord_index = randi_range(0, tonic_chords_in_key.size() - 1)
+	generated_chords.append(tonic_chords_in_key[start_chord_index])
+
+
+	# 3. 2番目以降のコードを選択 (target_number - 1 回繰り返す):
+
+	# 4. コード進行の終了処理 (任意):
 	
-	#for i in range(1, target_number):
-	#	current_function = get_function_of(generated_chords[i-1]) # 前のコードの機能を取得
-	#	next_function_candidates = get_next_function_candidates(current_function) # T->SD/D, SD->D/T, D->T
-	#	chosen_next_function = next_function_candidates.pick_random()
-	#	chosen_chord = get_random_chord_from_function(chosen_next_function, tonic_chords, subdominant_chords, dominant_chords)
-	#	generated_chords.append(chosen_chord)
 
-	# 4. (オプション) 最後のコードをトニックにする調整
-	#if target_number > 1 and get_function_of(generated_chords.back()) != "T":
-	#	generated_chords[target_number-1] = tonic_chords[0] # 例: "C"
-	
-	print("生成ロジックの骨子です。詳細はこれから実装します。")
-	print("ターゲットキー: ", target_key, ", コード数: ", target_number)
-	print("生成されたコード（仮）: ", generated_chords)
+	# 結果表示
+	display_generated_chords()
 
 
-func get_function_of(chord: String) -> void:
-	# 処理の概要: 与えられたコード名が、現在のキーにおいてどのような機能（トニック、サブドミナント、ドミナント）を持つかを判定する。
 
-	# 1. 現在の `target_key` に基づいて、そのキーのダイアトニックコードと各機能（T, SD, D）の対応関係を準備する。
-	#    例: `target_key` が "C" の場合
-	#        トニック(T)    : ["C", "Am"]
-	#        サブドミナント(SD): ["Dm", "F"]
-	#        ドミナント(D)  : ["G", "Bm(b5)"]
-	#    この対応関係は、`generate_chord` 関数内の `tonic_chords`, `subdominant_chords`, `dominant_chords` のような形で
-	#    あらかじめ定義されているか、あるいはキーに応じて動的に生成するヘルパー関数を呼び出して取得する。
+func display_generated_chords() -> void:
+	print(generated_chords)
 
-	# 2. 引数 `chord` が、ステップ1で準備した各機能のコードリストのいずれに含まれるかを確認する。
-	#    - `tonic_chords` に含まれていれば、機能 "T" を返す。
-	#    - `subdominant_chords` に含まれていれば、機能 "SD" を返す。
-	#    - `dominant_chords` に含まれていれば、機能 "D" を返す。
-	# 3. いずれのリストにも含まれない場合（例: ノンダイアトニックコードや予期せぬ入力）、デフォルト値（例: 空文字や "Unknown"）を返すか、エラー処理を行う。
-	pass
