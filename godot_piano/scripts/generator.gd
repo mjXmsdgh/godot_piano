@@ -132,6 +132,77 @@ func generate_chord() -> void:
 
 
 	# 3. 2番目以降のコードを選択 (target_number - 1 回繰り返す):
+	#    target_number が1の場合はこのループは実行されない。
+	for _i in range(target_number - 1):
+		if generated_chords.is_empty():
+			printerr("Error: generated_chords is empty before generating the next chord. This should not happen if a start chord was added.")
+			break # 開始コードが何らかの理由で追加されなかった場合
+
+		var current_chord_name: String = generated_chords.back()
+		var current_chord_function: String = ""
+
+		# a. 現在のコードの機能を見つける
+		for chord_data in diatonic_chord_list:
+			if chord_data["key"] == target_key and chord_data["chord_name"] == current_chord_name:
+				current_chord_function = chord_data["function_name"]
+				break
+		
+		if current_chord_function.is_empty():
+			printerr("Error: Could not find function for current chord '%s' in key '%s'. Stopping generation." % [current_chord_name, target_key])
+			break 
+
+		var candidates_for_next_chord: Array[String] = []
+
+		# b. 次のコードの機能を選択し、候補コード群を取得する (シンプルなルール)
+		if current_chord_function == "T":
+			# トニック(T)からはサブドミナント(SD)またはドミナント(D)へ (ランダムに選択)
+			var choice = randi_range(0, 1) # 0: SDを試す, 1: Dを試す
+			if choice == 0 and not subdominant_chords_in_key.is_empty():
+				candidates_for_next_chord = subdominant_chords_in_key
+			elif not dominant_chords_in_key.is_empty(): # SDが空だったか、Dが選ばれた場合
+				candidates_for_next_chord = dominant_chords_in_key
+			elif not subdominant_chords_in_key.is_empty(): # Dも空でSDが残っていた場合 (choice == 1 だったがDが空)
+				candidates_for_next_chord = subdominant_chords_in_key
+			else:
+				# SDもDも利用できない場合、他のトニックコードがあればそれを選ぶ (現在のコード以外)
+				printerr("Warning: No SD or D chords available from T in key '%s'. Trying to use another T chord." % target_key)
+				var other_tonic_chords = tonic_chords_in_key.filter(func(c): return c != current_chord_name)
+				if not other_tonic_chords.is_empty():
+					candidates_for_next_chord = other_tonic_chords
+				else:
+					printerr("Error: No alternative T chords available. Stopping generation as no valid next chord found.")
+					break # 進行不可
+					
+		elif current_chord_function == "SD":
+			# サブドミナント(SD)からはドミナント(D)へ
+			if not dominant_chords_in_key.is_empty():
+				candidates_for_next_chord = dominant_chords_in_key
+			else:
+				printerr("Error: No D chords available from SD in key '%s'. Stopping generation." % target_key)
+				break # 進行不可
+				
+		elif current_chord_function == "D":
+			# ドミナント(D)からはトニック(T)へ
+			if not tonic_chords_in_key.is_empty():
+				candidates_for_next_chord = tonic_chords_in_key
+			else:
+				printerr("Error: No T chords available from D in key '%s'. Stopping generation." % target_key)
+				break # 進行不可
+		else:
+			printerr("Error: Unknown current chord function '%s' for chord '%s'. Stopping generation." % [current_chord_function, current_chord_name])
+			break 
+
+		# c. 候補の中から具体的なコードを選択 (同じコードの連続を避ける試み)
+		var next_chord: String
+		var filtered_candidates = candidates_for_next_chord.filter(func(c): return c != current_chord_name)
+		
+		if not filtered_candidates.is_empty():
+			next_chord = filtered_candidates[randi_range(0, filtered_candidates.size() - 1)]
+		elif not candidates_for_next_chord.is_empty(): # フィルタリング後の候補がないが、元の候補はある場合 (つまり全ての候補がカレントコードと同じ)
+			next_chord = candidates_for_next_chord[randi_range(0, candidates_for_next_chord.size() - 1)] # 仕方ないので同じコードを選ぶ
+		
+		generated_chords.append(next_chord)
+
 
 	# 4. コード進行の終了処理 (任意):
 	
@@ -143,4 +214,3 @@ func generate_chord() -> void:
 
 func display_generated_chords() -> void:
 	print(generated_chords)
-
