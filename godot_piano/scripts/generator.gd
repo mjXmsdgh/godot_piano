@@ -205,7 +205,26 @@ func generate_chord() -> void:
 
 
 	# 4. コード進行の終了処理 (任意):
-	
+	#    生成されたコード進行の最後を、そのキーのI度のトニックコードで終わらせる。
+	if not generated_chords.is_empty():
+		var primary_tonic_chord_name: String = ""
+
+		# a. target_key の I度のトニックコードを見つける
+		#    diatonic_chord_list から "degree" が "I" (またはキーによって "Im" など) のものを探す
+		#    ここでは簡単のため、tonic_chords_in_key の最初の要素をI度と仮定する。
+		#    より正確には degree 情報を使うべき。
+		#    例: Cメジャーなら "C", Aマイナーなら "Am"
+		for chord_data in diatonic_chord_list:
+			if chord_data["key"] == target_key and (chord_data["degree"] == "I" or chord_data["degree"] == "Im"): # メジャーのI度、マイナーのIm度を考慮
+				primary_tonic_chord_name = chord_data["chord_name"]
+				break
+		
+		if not primary_tonic_chord_name.is_empty():
+			# b. 最後のコードがI度のトニックでなければ置き換える
+			if generated_chords.back() != primary_tonic_chord_name:
+				generated_chords.pop_back() # 最後の要素を削除
+				generated_chords.append(primary_tonic_chord_name) # I度のトニックを追加
+
 
 	# 結果表示
 	display_generated_chords()
