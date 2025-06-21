@@ -100,28 +100,35 @@ func set_target_number(number: int) -> void:
 	target_number = number	
 
 
+# 指定されたキーのダイアトニックコードを機能別に分類して辞書として返す
+func _get_chords_by_function_for_key(key: String) -> Dictionary:
+	var chords_by_function: Dictionary = {
+		"T": [] as Array[String],
+		"SD": [] as Array[String],
+		"D": [] as Array[String]
+	}
+
+	for chord_data in diatonic_chord_list:
+		if chord_data["key"] == key:
+			var function_name: String = chord_data["function_name"]
+			if chords_by_function.has(function_name):
+				chords_by_function[function_name].append(chord_data["chord_name"])
+	
+	return chords_by_function
+
+
 func generate_chord() -> void:
 	generated_chords.clear() # 前回生成されたコード進行をクリア
 
-	# --- コード生成ロジック ---
-
-	# 1. `target_key` に基づいてダイアトニックコードをフィルタリング:
-	#    - `diatonic_chord_list` から、現在の `target_key` に一致するコードのみを抽出する。
-	#    - 抽出したコードを、機能（トニック(T), サブドミナント(SD), ドミナント(D)など）ごとに分類しておく。
-	#      例: `tonic_chords_in_key`, `subdominant_chords_in_key`, `dominant_chords_in_key` のような配列や辞書を作成する。
-	var tonic_chords_in_key: Array[String] = []
-	var subdominant_chords_in_key: Array[String] = []
-	var dominant_chords_in_key: Array[String] = []
-
-	for chord in diatonic_chord_list:
-		if chord["key"] == target_key:
-			if chord["function_name"] == "T":
-				tonic_chords_in_key.append(chord["chord_name"])
-			elif chord["function_name"] == "SD":
-				subdominant_chords_in_key.append(chord["chord_name"])
-			elif chord["function_name"] == "D":
-				dominant_chords_in_key.append(chord["chord_name"])
-
+	# 1. `target_key` に基づいてダイアトニックコードをフィルタリング
+	var chords_in_key: Dictionary = _get_chords_by_function_for_key(target_key)
+	var tonic_chords_in_key: Array[String] = chords_in_key.get("T", [])
+	var subdominant_chords_in_key: Array[String] = chords_in_key.get("SD", [])
+	var dominant_chords_in_key: Array[String] = chords_in_key.get("D", [])
+	
+	if tonic_chords_in_key.is_empty():
+		printerr("Error: No tonic chords found for key '%s'. Cannot generate chord progression." % target_key)
+		return
 
 	# 2. コード進行の開始コードを選択:
 	#    - 一般的に、コード進行はトニック(T)から始まることが多い。
