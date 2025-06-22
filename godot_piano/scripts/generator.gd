@@ -144,27 +144,8 @@ func generate_chord() -> void:
 		var next_chord: String = _get_next_chord(generated_chords.back(), target_key, tonic_chords_in_key, subdominant_chords_in_key, dominant_chords_in_key, diatonic_chord_list)
 		generated_chords.append(next_chord)
 
-
-	# 4. コード進行の終了処理 (任意):
-	#    生成されたコード進行の最後を、そのキーのI度のトニックコードで終わらせる。
-	if not generated_chords.is_empty():
-		var primary_tonic_chord_name: String = ""
-
-		# a. target_key の I度のトニックコードを見つける
-		#    diatonic_chord_list から "degree" が "I" (またはキーによって "Im" など) のものを探す
-		#    ここでは簡単のため、tonic_chords_in_key の最初の要素をI度と仮定する。
-		#    より正確には degree 情報を使うべき。
-		#    例: Cメジャーなら "C", Aマイナーなら "Am"
-		for chord_data in diatonic_chord_list:
-			if chord_data["key"] == target_key and (chord_data["degree"] == "I" or chord_data["degree"] == "Im"): # メジャーのI度、マイナーのIm度を考慮
-				primary_tonic_chord_name = chord_data["chord_name"]
-				break
-		
-		if not primary_tonic_chord_name.is_empty():
-			# b. 最後のコードがI度のトニックでなければ置き換える
-			if generated_chords.back() != primary_tonic_chord_name:
-				generated_chords.pop_back() # 最後の要素を削除
-				generated_chords.append(primary_tonic_chord_name) # I度のトニックを追加
+	# 4. コード進行の終了処理
+	_finalize_chord_progression(generated_chords, target_key, diatonic_chord_list)
 
 
 	# 結果表示
@@ -239,3 +220,23 @@ func _get_next_chord(current_chord_name: String, key: String, tonic_chords: Arra
 	else:
 		printerr("Error: No valid next chord could be selected even after filtering candidates for '%s'." % current_chord_name)
 		return "" # 候補が全くない場合は失敗
+
+
+# コード進行の最後を、そのキーの主要なトニックコードで解決させる
+func _finalize_chord_progression(progression: Array[String], key: String, all_diatonic_chords: Array[Dictionary]) -> void:
+	# 進行が空の場合は何もしない
+	if progression.is_empty():
+		return
+
+	var primary_tonic_chord_name: String = ""
+
+	# key の I度またはIm度のトニックコードを見つける
+	for chord_data in all_diatonic_chords:
+		if chord_data["key"] == key and (chord_data["degree"] == "I" or chord_data["degree"] == "Im"):
+			primary_tonic_chord_name = chord_data["chord_name"]
+			break
+	
+	# I度のトニックが見つかり、かつ最後のコードがそれと異なる場合、置き換える
+	if not primary_tonic_chord_name.is_empty() and progression.back() != primary_tonic_chord_name:
+		progression.pop_back()
+		progression.append(primary_tonic_chord_name)
