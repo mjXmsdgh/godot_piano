@@ -167,10 +167,6 @@ func _get_next_chord(current_chord_name: String, key: String, tonic_chords: Arra
 		if chord_data["key"] == key and chord_data["chord_name"] == current_chord_name:
 			current_chord_function = chord_data["function_name"]
 			break
-	
-	if current_chord_function.is_empty():
-		printerr("Error: Could not determine function for chord '%s' in key '%s'." % [current_chord_name, key])
-		return "" # 機能が見つからない場合は失敗
 
 	var candidates_for_next_chord: Array[String] = []
 
@@ -190,25 +186,16 @@ func _get_next_chord(current_chord_name: String, key: String, tonic_chords: Arra
 			var other_tonic_chords = tonic_chords.filter(func(c): return c != current_chord_name)
 			if not other_tonic_chords.is_empty():
 				candidates_for_next_chord = other_tonic_chords
-			else:
-				printerr("Warning: No suitable next chord found from T in key '%s'." % key)
-				return "" # 適切な候補が見つからない場合は失敗
 				
 	elif current_chord_function == "SD":
 		# サブドミナント(SD)からはドミナント(D)へ
 		if not dominant_chords.is_empty():
 			candidates_for_next_chord = dominant_chords
-		else:
-			printerr("Error: No D chords available from SD in key '%s'." % key)
-			return "" # 進行不可の場合は失敗
 			
 	elif current_chord_function == "D":
 		# ドミナント(D)からはトニック(T)へ
 		if not tonic_chords.is_empty():
 			candidates_for_next_chord = tonic_chords
-		else:
-			printerr("Error: No T chords available from D in key '%s'." % key)
-			return "" # 進行不可の場合は失敗
 	
 	# c. 候補の中から具体的なコードを選択 (同じコードの連続を避ける試み)
 	var filtered_candidates = candidates_for_next_chord.filter(func(c): return c != current_chord_name)
