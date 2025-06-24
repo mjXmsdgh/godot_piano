@@ -98,6 +98,13 @@ func generate_chord() -> void:
 	if tonic_chords.is_empty():
 		return
 
+	# 1.5. 主要なトニックコード（I度）を特定
+	var primary_tonic_chord: String = ""
+	for chord_data in diatonic_chord_list:
+		if chord_data["key"] == target_key and (chord_data["degree"] == "I" or chord_data["degree"] == "Im"):
+			primary_tonic_chord = chord_data["chord_name"]
+			break
+
 	# 2. 開始コードをトニック(T)の中からランダムに選択
 	var start_chord_index = randi_range(0, tonic_chords.size() - 1)
 	generated_chords.append(tonic_chords[start_chord_index])
@@ -111,7 +118,7 @@ func generate_chord() -> void:
 		generated_chords.append(next_chord)
 
 	# 4. コード進行の最後を安定したトニックコードで終わらせる
-	_finalize_chord_progression(generated_chords, target_key, diatonic_chord_list)
+	_finalize_chord_progression(generated_chords, primary_tonic_chord)
 
 	# 5. 結果をコンソールに出力
 	display_generated_chords()
@@ -168,17 +175,12 @@ func _get_next_chord(
 		return current_chord_name
 
 ## コード進行の最後を、そのキーの主要なトニックコードで解決させる
-func _finalize_chord_progression(progression: Array[String], key: String, all_diatonic_chords: Array[Dictionary]) -> void:
-	# 進行が空の場合は何もしない
-	if progression.is_empty():
+func _finalize_chord_progression(progression: Array[String], primary_tonic_chord_name: String) -> void:
+	# 進行が空、または主要トニックが不明な場合は何もしない
+	if progression.is_empty() or primary_tonic_chord_name.is_empty():
 		return
-	var primary_tonic_chord_name: String = ""
-	# a. そのキーのI度（またはIm度）のコードを探す
-	for chord_data in all_diatonic_chords:
-		if chord_data["key"] == key and (chord_data["degree"] == "I" or chord_data["degree"] == "Im"):
-			primary_tonic_chord_name = chord_data["chord_name"]
-			break
-	# b. I度のコードが見つかり、かつ最後のコードがそれと違う場合、置き換える
-	if not primary_tonic_chord_name.is_empty() and progression.back() != primary_tonic_chord_name:
+
+	# 最後のコードが主要トニックと違う場合、置き換える
+	if progression.back() != primary_tonic_chord_name:
 		progression.pop_back()
 		progression.append(primary_tonic_chord_name)
