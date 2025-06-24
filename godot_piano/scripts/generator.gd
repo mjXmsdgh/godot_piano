@@ -164,15 +164,15 @@ func _get_next_chord(
 	var filtered_candidates: Array[String] = candidates.filter(func(c): return c != current_chord_name)
 	
 	# e. 候補の中からランダムに1つ選んで返す
-	if not filtered_candidates.is_empty():
-		# フィルタリング後の候補があれば、そこから選ぶ
-		return filtered_candidates[randi_range(0, filtered_candidates.size() - 1)]
-	elif not candidates.is_empty():
-		# フィルタリングで候補がなくなった場合（＝全ての候補が現在のコードと同じだった場合）、仕方なく元の候補から選ぶ
-		return candidates[randi_range(0, candidates.size() - 1)]
+	var chosen_chord: String
+	if not filtered_candidates.is_empty(): # フィルタリング後の候補があれば、そこから選ぶ
+		chosen_chord = filtered_candidates[randi_range(0, filtered_candidates.size() - 1)]
+	elif not candidates.is_empty(): # フィルタリングで候補がなくなった場合、元の候補から選ぶ
+		chosen_chord = candidates[randi_range(0, candidates.size() - 1)]
 	else:
-		# 適切な候補が全く見つからなかった場合は、現在のコードをそのまま返す
-		return current_chord_name
+		chosen_chord = current_chord_name # 適切な候補が全く見つからなかった場合は、現在のコードをそのまま返す
+
+	return chosen_chord
 
 ## コード進行の最後を、そのキーの主要なトニックコードで解決させる
 func _finalize_chord_progression(progression: Array[String], primary_tonic_chord_name: String) -> void:
