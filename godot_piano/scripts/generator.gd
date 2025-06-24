@@ -108,11 +108,7 @@ func generate_chord() -> void:
 		var next_chord: String = _get_next_chord(
 			generated_chords.back(),
 			target_key,
-			{
-				"T": tonic_chords,
-				"SD": subdominant_chords,
-				"D": dominant_chords
-			},
+			chords_in_key,
 			diatonic_chord_list
 		)
 		generated_chords.append(next_chord)
