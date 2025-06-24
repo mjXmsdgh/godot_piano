@@ -94,6 +94,7 @@ func generate_chord() -> void:
 	var tonic_chords: Array[String] = chords_in_key.get("T", []) as Array[String]
 	var subdominant_chords: Array[String] = chords_in_key.get("SD", []) as Array[String]
 	var dominant_chords: Array[String] = chords_in_key.get("D", []) as Array[String]
+
 	# トニックコードがない場合は生成を中止
 	if tonic_chords.is_empty():
 		return
