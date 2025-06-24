@@ -106,10 +106,7 @@ func generate_chord() -> void:
 	for _i in range(target_number - 1):
 		# 直前のコードに基づいて次のコードを決定
 		var next_chord: String = _get_next_chord(
-			generated_chords.back(),
-			target_key,
-			chords_in_key,
-			diatonic_chord_list
+			generated_chords.back(), chords_in_key
 		)
 		generated_chords.append(next_chord)
 
@@ -126,9 +123,7 @@ func display_generated_chords() -> void:
 ## 現在のコードに基づいて、ルールに従い次のコードを1つ選択する
 func _get_next_chord(
 	current_chord_name: String,
-	key: String,
-	chords_by_function: Dictionary, # { "T": Array[String], "SD": Array[String], "D": Array[String] }
-	all_diatonic_chords: Array[Dictionary]
+	chords_by_function: Dictionary # { "T": Array[String], "SD": Array[String], "D": Array[String] }
 ) -> String:
 	# コード進行の基本ルールを定義 (T→SD/D, SD→D, D→T)
 	var function_transition: Dictionary = {
@@ -136,11 +131,11 @@ func _get_next_chord(
 		"SD": ["D"],
 		"D": ["T"]
 	}
-	# a. 現在のコードの機能(T/SD/D)を調べる
+	# a. 現在のコードの機能(T/SD/D)を、渡された機能別コードリストから調べる
 	var current_chord_function: String = ""
-	for chord_data in all_diatonic_chords:
-		if chord_data["key"] == key and chord_data["chord_name"] == current_chord_name:
-			current_chord_function = chord_data["function_name"]
+	for func_name in chords_by_function:
+		if current_chord_name in chords_by_function[func_name]:
+			current_chord_function = func_name
 			break
 
 	# b. ルールに基づいて、次に進める機能の候補リストを取得
