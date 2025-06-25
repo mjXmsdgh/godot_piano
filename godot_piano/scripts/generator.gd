@@ -16,7 +16,7 @@ func _ready() -> void:
 	# アプリケーション起動時にコードリストをメモリに読み込む
 	load_chord_list()
 	# コード進行を生成する
-	generate_chord()
+	#generate_chord()
 
 
 # --- データ読み込み ---
@@ -122,7 +122,7 @@ func generate_chord() -> void:
 	_finalize_chord_progression(generated_chords, primary_tonic_chord)
 
 	# 5. 結果をコンソールに出力
-	display_generated_chords()
+	#display_generated_chords()
 
 ## 生成されたコード進行をコンソールに出力する（デバッグ用）
 func display_generated_chords() -> void:
