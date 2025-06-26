@@ -12,9 +12,24 @@ func _process(delta: float) -> void:
 
 
 func _on_generate_pressed() -> void:
+
+	# コードジェネレーターのノードを取得
+	var chord_generator = get_node_or_null("./generator")
+
+	# コード進行を生成し、結果を取得
+	chord_generator.generate_chord()
+	var generated_chord_progression: Array[String] = chord_generator.generated_chords
+
+	print(generated_chord_progression)
+
+	# --- 演奏 ---
+	# 鍵盤のノードを取得します。
+	var keyboard = get_node_or_null("../kenban")
+
+	# 生成されたコード進行を順番に演奏します。
+	#for chord in generated_chord_progression:
+
+		# コードから音を取得する
+
+
 	
-	var generator=get_node_or_null("./generator")
-	$generator.generate_chord()
-	var test=$generator.generated_chords
-	
-	print(test)

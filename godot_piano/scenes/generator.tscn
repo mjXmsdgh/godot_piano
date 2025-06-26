@@ -1,11 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://ueyfgl6jvvx0"]
+[gd_scene load_steps=6 format=3 uid="uid://ueyfgl6jvvx0"]
 
+[ext_resource type="PackedScene" uid="uid://2jtchecwew7c" path="res://scenes/chord_manager.tscn" id="1_3soth"]
 [ext_resource type="Script" path="res://scripts/generator.gd" id="2_k5p4r"]
 [ext_resource type="PackedScene" uid="uid://54b4gysqftl3" path="res://scenes/kenban.tscn" id="2_xgcht"]
 [ext_resource type="Script" path="res://scripts/gen_manager.gd" id="2_xvckv"]
 [ext_resource type="Script" path="res://scripts/diatonic_chord_manager.gd" id="3_o7x4h"]
 
 [node name="Generator" type="Node2D"]
+
+[node name="CordManager" parent="." instance=ExtResource("1_3soth")]
 
 [node name="kenban" parent="." instance=ExtResource("2_xgcht")]
 
