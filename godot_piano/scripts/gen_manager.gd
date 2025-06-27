@@ -21,15 +21,3 @@ func _on_generate_pressed() -> void:
 	var generated_chord_progression: Array[String] = chord_generator.generated_chords
 
 	print(generated_chord_progression)
-
-	# --- 演奏 ---
-	# 鍵盤のノードを取得します。
-	var keyboard = get_node_or_null("../kenban")
-
-	# 生成されたコード進行を順番に演奏します。
-	#for chord in generated_chord_progression:
-
-		# コードから音を取得する
-
-
-	
