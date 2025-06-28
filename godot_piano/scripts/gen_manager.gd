@@ -11,8 +11,7 @@ func _process(delta: float) -> void:
 	pass
 
 
-func _on_generate_pressed() -> void:
-
+func get_chord_progression():
 	# コードジェネレーターのノードを取得
 	var chord_generator = get_node_or_null("./generator")
 
@@ -20,4 +19,13 @@ func _on_generate_pressed() -> void:
 	chord_generator.generate_chord()
 	var generated_chord_progression: Array[String] = chord_generator.generated_chords
 
+	return generated_chord_progression
+
+
+
+
+func _on_generate_pressed():
+
+	var generated_chord_progression = get_chord_progression()
+	
 	print(generated_chord_progression)
