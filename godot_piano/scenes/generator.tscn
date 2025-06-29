@@ -2,9 +2,9 @@
 
 [ext_resource type="PackedScene" uid="uid://2jtchecwew7c" path="res://scenes/chord_manager.tscn" id="1_3soth"]
 [ext_resource type="Script" path="res://scripts/generate_play.gd" id="1_b6lqq"]
-[ext_resource type="Script" path="res://scripts/generator.gd" id="2_k5p4r"]
+[ext_resource type="Script" path="res://scripts/generate_chord.gd" id="2_k5p4r"]
 [ext_resource type="PackedScene" uid="uid://54b4gysqftl3" path="res://scenes/kenban.tscn" id="2_xgcht"]
-[ext_resource type="Script" path="res://scripts/gen_manager.gd" id="2_xvckv"]
+[ext_resource type="Script" path="res://scripts/chord_generator.gd" id="2_xvckv"]
 [ext_resource type="Script" path="res://scripts/diatonic_chord_manager.gd" id="3_o7x4h"]
 
 [node name="Generate_play" type="Node2D"]
@@ -21,21 +21,21 @@ text = "play"
 
 [node name="kenban" parent="." instance=ExtResource("2_xgcht")]
 
-[node name="gen_Manager" type="Node2D" parent="."]
+[node name="chord_genarator" type="Node2D" parent="."]
 script = ExtResource("2_xvckv")
 
-[node name="Generate" type="Button" parent="gen_Manager"]
+[node name="Generate_Button" type="Button" parent="chord_genarator"]
 offset_left = 17.0
 offset_top = 205.0
 offset_right = 149.0
 offset_bottom = 236.0
 text = "Genarate Chord"
 
-[node name="generator" type="Node2D" parent="gen_Manager"]
+[node name="generate_chord" type="Node2D" parent="chord_genarator"]
 script = ExtResource("2_k5p4r")
 
-[node name="diatonic_chord_manager" type="Node2D" parent="gen_Manager/generator"]
+[node name="diatonic_chord_manager" type="Node2D" parent="chord_genarator/generate_chord"]
 script = ExtResource("3_o7x4h")
 
 [connection signal="pressed" from="play_chord" to="." method="_on_play_chord_pressed"]
-[connection signal="pressed" from="gen_Manager/Generate" to="gen_Manager" method="_on_generate_pressed"]
+[connection signal="pressed" from="chord_genarator/Generate_Button" to="chord_genarator" method="_on_generate_pressed"]
