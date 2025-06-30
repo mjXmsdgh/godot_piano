@@ -3,29 +3,25 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
 
+	# test
+	#var chords: Array[String] = generate_chord("C", 4)
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
 
+func generate_chord(target_key: String, target_number: int) -> Array[String]:
 
-func get_chord_progression():
 	# コードジェネレーターのノードを取得
-	var chord_generator = get_node_or_null("./generator")
+	var chord_logic_node=get_node_or_null("./generate_chord")
 
-	# コード進行を生成し、結果を取得
-	chord_generator.generate_chord()
-	var generated_chord_progression: Array[String] = chord_generator.generated_chords
+	chord_logic_node.set_target_key(target_key)
+	chord_logic_node.set_target_number(target_number)
+	chord_logic_node.generate_chord()
 
-	return generated_chord_progression
+	var generated_chords: Array[String] = chord_logic_node.generated_chords
 
-
-
-
-func _on_generate_pressed():
-
-	var generated_chord_progression = get_chord_progression()
-	
-	print(generated_chord_progression)
+	print("Generated Chords: ", generated_chords)
+	return generated_chords

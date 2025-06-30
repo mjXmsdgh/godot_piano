@@ -24,13 +24,6 @@ text = "play"
 [node name="chord_genarator" type="Node2D" parent="."]
 script = ExtResource("2_xvckv")
 
-[node name="Generate_Button" type="Button" parent="chord_genarator"]
-offset_left = 17.0
-offset_top = 205.0
-offset_right = 149.0
-offset_bottom = 236.0
-text = "Genarate Chord"
-
 [node name="generate_chord" type="Node2D" parent="chord_genarator"]
 script = ExtResource("2_k5p4r")
 
@@ -38,4 +31,3 @@ script = ExtResource("2_k5p4r")
 script = ExtResource("3_o7x4h")
 
 [connection signal="pressed" from="play_chord" to="." method="_on_play_chord_pressed"]
-[connection signal="pressed" from="chord_genarator/Generate_Button" to="chord_genarator" method="_on_generate_pressed"]
