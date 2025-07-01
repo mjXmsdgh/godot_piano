@@ -3,6 +3,8 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+
+	
 	pass # Replace with function body.
 
 
@@ -12,5 +14,8 @@ func _process(delta: float) -> void:
 
 
 func _on_play_chord_pressed() -> void:
-	print("play")
-	pass # Replace with function body.
+	# コード生成
+	var chord_generator_node=get_node_or_null("chord_genarator")
+	var chord_list: Array[String] = chord_generator_node.generate_chord("C", 4)
+
+	$chord_list.text = " ".join(chord_list)

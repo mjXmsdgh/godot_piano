@@ -11,11 +11,17 @@
 script = ExtResource("1_b6lqq")
 
 [node name="play_chord" type="Button" parent="."]
-offset_left = 322.0
-offset_top = 214.0
-offset_right = 330.0
-offset_bottom = 222.0
+offset_left = 85.0
+offset_top = 139.0
+offset_right = 126.0
+offset_bottom = 170.0
 text = "play"
+
+[node name="chord_list" type="Label" parent="."]
+offset_left = 243.0
+offset_top = 145.0
+offset_right = 283.0
+offset_bottom = 168.0
 
 [node name="CordManager" parent="." instance=ExtResource("1_3soth")]
 
