@@ -15,7 +15,7 @@ func _process(delta: float) -> void:
 
 func _on_play_chord_pressed() -> void:
 	# コード生成
-	var chord_generator_node=get_node_or_null("chord_genarator")
+	var chord_generator_node=get_node_or_null("chord_generator")
 	var chord_list: Array[String] = chord_generator_node.generate_chord("C", 4)
 
 	$chord_list.text = " ".join(chord_list)

@@ -27,13 +27,13 @@ offset_bottom = 168.0
 
 [node name="kenban" parent="." instance=ExtResource("2_xgcht")]
 
-[node name="chord_genarator" type="Node2D" parent="."]
+[node name="chord_generator" type="Node2D" parent="."]
 script = ExtResource("2_xvckv")
 
-[node name="generate_chord" type="Node2D" parent="chord_genarator"]
+[node name="generate_chord" type="Node2D" parent="chord_generator"]
 script = ExtResource("2_k5p4r")
 
-[node name="diatonic_chord_manager" type="Node2D" parent="chord_genarator/generate_chord"]
+[node name="diatonic_chord_manager" type="Node2D" parent="chord_generator/generate_chord"]
 script = ExtResource("3_o7x4h")
 
 [connection signal="pressed" from="play_chord" to="." method="_on_play_chord_pressed"]
