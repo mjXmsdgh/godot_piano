@@ -14,8 +14,18 @@ func _process(delta: float) -> void:
 
 
 func _on_play_chord_pressed() -> void:
-	# コード生成
-	var chord_generator_node=get_node_or_null("chord_generator")
-	var chord_list: Array[String] = chord_generator_node.generate_chord("C", 4)
+	# コードジェネレーターノードを取得
+	var chord_generator = get_node_or_null("chord_generator")
+	# 指定されたキーと数でコード進行を生成
+	var generated_chords: Array[String] = chord_generator.generate_chord("C", 4)
 
-	$chord_list.text = " ".join(chord_list)
+	# UIラベルに生成されたコードリストを表示
+	$chord_list.text = " ".join(generated_chords)
+	
+	# コードの構成音を管理するノードを取得
+	var chord_manager = get_node_or_null("ChordManager")
+	
+	# デバッグ用に "C" コードの構成音を取得してコンソールに出力
+	var notes_for_c = chord_manager.get_notes_by_chord_name("C")
+
+	print(notes_for_c)

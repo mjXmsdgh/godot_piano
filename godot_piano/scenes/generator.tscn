@@ -23,7 +23,7 @@ offset_top = 145.0
 offset_right = 283.0
 offset_bottom = 168.0
 
-[node name="CordManager" parent="." instance=ExtResource("1_3soth")]
+[node name="ChordManager" parent="." instance=ExtResource("1_3soth")]
 
 [node name="kenban" parent="." instance=ExtResource("2_xgcht")]
 
