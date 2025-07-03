@@ -26,6 +26,13 @@ func _on_play_chord_pressed() -> void:
 	var chord_manager = get_node_or_null("ChordManager")
 	
 	# デバッグ用に "C" コードの構成音を取得してコンソールに出力
-	var notes_for_c = chord_manager.get_notes_by_chord_name("C")
+	#var notes_for_chord = chord_manager.get_notes_by_chord_name("C")
 
-	print(notes_for_c)
+	for item in generated_chords:
+		var notes_for_chord = chord_manager.get_notes_by_chord_name(item)
+		print(notes_for_chord)
+
+
+
+
+	
