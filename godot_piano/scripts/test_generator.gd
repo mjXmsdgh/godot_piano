@@ -28,11 +28,18 @@ func _on_play_chord_pressed() -> void:
 	# デバッグ用に "C" コードの構成音を取得してコンソールに出力
 	#var notes_for_chord = chord_manager.get_notes_by_chord_name("C")
 
-	for item in generated_chords:
-		var notes_for_chord = chord_manager.get_notes_by_chord_name(item)
-		print(notes_for_chord)
+	# -------コードを演奏-----
+	var kenban = get_node_or_null("kenban")
 
+	# 各コードを順番に演奏
+	for chord_name in generated_chords:
+		# コードの構成音を取得
+		var notes_for_chord = chord_manager.get_notes_by_chord_name(chord_name)
+		print("Playing chord: %s, Notes: %s" % [chord_name, notes_for_chord])
 
+		# コードの構成音を同時に演奏
+		for note in notes_for_chord:
+			kenban.play_note(note)
 
-
-	
+		# 次のコードを演奏する前に1秒待機
+		await get_tree().create_timer(1.0).timeout
