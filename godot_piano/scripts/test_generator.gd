@@ -35,7 +35,6 @@ func _on_play_chord_pressed() -> void:
 	for chord_name in generated_chords:
 		# コードの構成音を取得
 		var notes_for_chord = chord_manager.get_notes_by_chord_name(chord_name)
-		print("Playing chord: %s, Notes: %s" % [chord_name, notes_for_chord])
 
 		# コードの構成音を同時に演奏
 		for note in notes_for_chord:
