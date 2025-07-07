@@ -17,7 +17,7 @@ func _on_play_chord_pressed() -> void:
 	# コードジェネレーターノードを取得
 	var chord_generator = get_node_or_null("chord_generator")
 	# 指定されたキーと数でコード進行を生成
-	var generated_chords: Array[String] = chord_generator.generate_chord("C", 4)
+	var generated_chords: Array[String] = chord_generator.generate_chord("D", 4)
 
 	# UIラベルに生成されたコードリストを表示
 	$chord_list.text = " ".join(generated_chords)
