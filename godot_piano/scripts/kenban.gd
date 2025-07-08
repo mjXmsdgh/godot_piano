@@ -36,36 +36,46 @@ var key_data = [
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-
+	# key_data配列をループして、各鍵盤ノードを初期化する
 	for data in key_data:
+		# 鍵盤データを変数に展開
 		var note_name: String = data.note_name
 		var frequency: float = data.frequency
 		var node_path: String = data.node_path
 		
+		# パスを使ってシーンツリーから鍵盤ノードを取得
 		var key_node = get_node(node_path)
 
 		if !key_node:
 			printerr("Error: Node not found at path: %s for note %s" % [node_path, note_name])
 
+		# 鍵盤ノードに周波数と音名を設定
 		key_node.set_freq(frequency)
 		key_node.set_key_name(note_name)
+		# 音名でノードを呼び出せるように、辞書に登録
 		notes[note_name] = key_node
 
 
+# 指定された音名の音を再生する
 func play_note(note_name: String) -> void:
+	# 辞書に指定された音名が存在するかチェック
 	if not notes.has(note_name):
 		printerr("KenbanNode: Key '", note_name, "' not found in notes dictionary.")
 		return
 
+	# 辞書から音名に対応する鍵盤ノードを取得
 	var key_node = notes[note_name]
+	# 取得したノードが有効か（削除されていないか等）をチェック
 	if not is_instance_valid(key_node):
 		printerr("KenbanNode: key_node is not valid for note_name: '", note_name, "'")
 		return
 		
+	# 鍵盤ノードが再生メソッドを持っているかチェック
 	if not key_node.has_method("play_sound"):
 		printerr("KenbanNode: key_node '", key_node.name, "' does not have play_sound method.")
 		return
 			
+	# 鍵盤ノードの再生メソッドを実行
 	key_node.play_sound()
 		
 
