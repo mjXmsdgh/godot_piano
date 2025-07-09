@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://ueyfgl6jvvx0"]
+
+[ext_resource type="Script" path="res://scripts/test_generator.gd" id="1_0bqpi"]
+[ext_resource type="PackedScene" uid="uid://2jtchecwew7c" path="res://scenes/chord_manager.tscn" id="2_ea5pl"]
+[ext_resource type="PackedScene" uid="uid://54b4gysqftl3" path="res://scenes/kenban.tscn" id="3_6g075"]
+[ext_resource type="Script" path="res://scripts/chord_generator.gd" id="4_pgga1"]
+[ext_resource type="Script" path="res://scripts/generate_chord.gd" id="5_7bqbc"]
+[ext_resource type="Script" path="res://scripts/diatonic_chord_manager.gd" id="6_1rnhr"]
+
+[node name="generator_test" type="Node2D"]
+script = ExtResource("1_0bqpi")
+
+[node name="play_chord" type="Button" parent="."]
+offset_left = 85.0
+offset_top = 139.0
+offset_right = 126.0
+offset_bottom = 170.0
+text = "play"
+
+[node name="chord_list" type="Label" parent="."]
+offset_left = 243.0
+offset_top = 145.0
+offset_right = 283.0
+offset_bottom = 168.0
+
+[node name="ChordManager" parent="." instance=ExtResource("2_ea5pl")]
+
+[node name="kenban" parent="." instance=ExtResource("3_6g075")]
+
+[node name="chord_generator" type="Node2D" parent="."]
+script = ExtResource("4_pgga1")
+
+[node name="generate_chord" type="Node2D" parent="chord_generator"]
+script = ExtResource("5_7bqbc")
+
+[node name="diatonic_chord_manager" type="Node2D" parent="chord_generator/generate_chord"]
+script = ExtResource("6_1rnhr")
+
+[connection signal="pressed" from="play_chord" to="." method="_on_play_chord_pressed"]
