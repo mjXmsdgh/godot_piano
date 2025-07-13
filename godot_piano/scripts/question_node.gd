@@ -1,21 +1,23 @@
 # 音楽コード当てクイズの問題を管理するノード
 extends Node2D
 
-# CodeManagerへの参照
+# QuizManager: 外部のロジックコンポーネントへの参照
 @onready var code_manager: Node = get_node_or_null("../CodeManager")
 
-# ピアノキーボードノードへの参照
+# QuizUI: UI要素への参照
 @onready var piano_keyboard_node: Node = get_node_or_null("../kenban")
 
-# 問題表示用ラベルへの参照
+# QuizUI: UI要素への参照
 @onready var question_label: Label = $QuestionLabel
 
-var target_chord="C"
+# QuizManager: クイズの正解データ
 var current_target_chord_name: String = ""
 var current_target_chord_notes
+
+# QuizManager: ユーザーの回答データ
 var user_played_notes: Array = []
 
-# クイズのインタラクション状態
+# QuizManager: クイズの状態を管理する
 enum QuizInteractionState {
 	INITIAL,            # 初期状態、または問題選択前
 	AWAITING_INPUT,     # 問題提示後、ユーザーの最初の入力を待っている状態
@@ -24,9 +26,9 @@ enum QuizInteractionState {
 }
 var current_interaction_state: QuizInteractionState = QuizInteractionState.INITIAL
 
-
-
-# 初期化処理
+# 混在: UIの準備とロジックの準備が混ざっている
+# QuizUI: is_instance_validでUIノードの存在を確認
+# QuizManager: 状態の初期化、乱数初期化、ロジックの開始(select_chord)
 func _ready() -> void:
 	# ピアノキーボードノード
 	if not is_instance_valid(piano_keyboard_node):
@@ -36,7 +38,6 @@ func _ready() -> void:
 	# CodeManagerノード
 	if not is_instance_valid(code_manager):
 		push_warning("QuestionNode: CodeManager node ('../CodeManager') not found. Chord selection might fail.")
-		
 
 	# 問題表示用ラベルノード
 	if not is_instance_valid(question_label):
@@ -51,9 +52,9 @@ func _ready() -> void:
 
 	select_chord()
 
-
-
-# keyが押されたときのシグナルを接続する
+# 混在: UI要素(キー)のシグナルを接続する処理
+# QuizUI: 自身の管理するUI要素(キー)をループしてシグナル接続を行う
+# QuizManager: シグナルの接続先(_on_individual_key_pressed)がロジックを含んでいる
 func connect_signals() -> void:
 	if not is_instance_valid(piano_keyboard_node):
 		return # ピアノキーボードノードが無効なら何もしない
@@ -66,13 +67,13 @@ func connect_signals() -> void:
 			if not key_node.is_connected("key_pressed", Callable(self, "_on_individual_key_pressed")):
 				key_node.connect("key_pressed", Callable(self, "_on_individual_key_pressed"))
 
-
-
-# 毎フレーム呼び出される処理 (現在は未使用)
+# どちらにも属さない (未使用)
 func _process(delta: float) -> void:
 	pass
 
-
+# 混在: UIイベントのハンドラだが、直接ロジックを呼び出している
+# QuizUI: ボタンが押された、というイベントを受け取る
+# QuizManager: select_chord()や状態変更といったロジックを実行する
 func _on_question_button_pressed() -> void:
 
 	# 問題を選んで表示
@@ -81,10 +82,13 @@ func _on_question_button_pressed() -> void:
 	# 状態を「入力待ち」に変更
 	current_interaction_state = QuizInteractionState.AWAITING_INPUT
 
-
+# QuizUI: UI要素であるラベルのテキストを更新する
 func update_label() -> void:
 	question_label.text=str(current_target_chord_name)
 
+# 混在: ロジックとUI更新が混ざっている
+# QuizManager: CodeManagerからコード情報を取得し、内部状態(current_target_chord...)を更新する
+# QuizUI: update_label()を呼び出してUIを更新する
 func select_chord() -> void:
 
 	# 利用可能なコードの数を取得
@@ -102,8 +106,9 @@ func select_chord() -> void:
 	# ラベルを更新
 	update_label()
 
-	
-# 個々の鍵盤が押されたときに呼び出される関数
+# 混在: UIイベントのハンドラだが、ロジックを直接実行している
+# QuizUI: 鍵盤が押された、というイベントを受け取る
+# QuizManager: 状態をチェックし、ユーザーの回答を記録し、評価を開始する
 func _on_individual_key_pressed(note_name: String) -> void:
 	if not (current_interaction_state == QuizInteractionState.AWAITING_INPUT or \
 			current_interaction_state == QuizInteractionState.COLLECTING_ANSWER):
@@ -116,8 +121,9 @@ func _on_individual_key_pressed(note_name: String) -> void:
 		current_interaction_state = QuizInteractionState.EVALUATING_ANSWER
 		evaluate_answer()
 
-
-# 回答を評価する関数
+# 混在: ロジックとUI更新が混ざっている
+# QuizManager: ユーザーの回答と正解を比較して正否を判定し、状態を更新する
+# QuizUI: 判定結果に応じてステータスラベルのテキストを更新する
 func evaluate_answer() -> void:
 
 	# 簡単な比較ロジック (順序を問わず、構成音が一致するか)
@@ -141,7 +147,7 @@ func evaluate_answer() -> void:
 	# current_interaction_state = QuizInteractionState.AWAITING_INPUT # すぐに次の入力を待つ場合
 	current_interaction_state = QuizInteractionState.INITIAL # 問題選択に戻る場合
 
-# 答えボタンが押されたとき
+# QuizUI: UIイベントのハンドラ。UI要素(ピアノ)を操作して音を鳴らす
 func _on_answer_pressed() -> void:
 
 	for item in current_target_chord_notes:
