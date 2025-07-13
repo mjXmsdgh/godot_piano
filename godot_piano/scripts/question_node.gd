@@ -1,14 +1,15 @@
 # 音楽コード当てクイズの問題を管理するノード
 extends Node2D
 
-# QuizManager: 外部のロジックコンポーネントへの参照
-@onready var code_manager: Node = get_node_or_null("../CodeManager")
 
 # QuizUI: UI要素への参照
 @onready var piano_keyboard_node: Node = get_node_or_null("../kenban")
 
 # QuizUI: UI要素への参照
 @onready var question_label: Label = $QuestionLabel
+
+# QuizManager: 外部のロジックコンポーネントへの参照
+@onready var code_manager: Node = get_node_or_null("../CodeManager")
 
 # QuizManager: クイズの正解データ
 var current_target_chord_name: String = ""
@@ -121,31 +122,39 @@ func _on_individual_key_pressed(note_name: String) -> void:
 		current_interaction_state = QuizInteractionState.EVALUATING_ANSWER
 		evaluate_answer()
 
-# 混在: ロジックとUI更新が混ざっている
-# QuizManager: ユーザーの回答と正解を比較して正否を判定し、状態を更新する
-# QuizUI: 判定結果に応じてステータスラベルのテキストを更新する
+
 func evaluate_answer() -> void:
+	var is_correct: bool = _check_answer_logic()
+	_update_feedback_ui(is_correct)
+	_reset_quiz_state()
 
-	# 簡単な比較ロジック (順序を問わず、構成音が一致するか)
-	var is_correct = false
-	if user_played_notes.size() == current_target_chord_notes.size():
-		var sorted_user_notes = user_played_notes.duplicate()
-		var sorted_target_notes = current_target_chord_notes.duplicate()
-		sorted_user_notes.sort()
-		sorted_target_notes.sort()
-		if sorted_user_notes == sorted_target_notes:
-			is_correct = true
 
+func _check_answer_logic() -> bool:
+
+	if user_played_notes.size() != current_target_chord_notes.size():
+		return false
+
+	var sorted_user_notes = user_played_notes.duplicate()
+	var sorted_target_notes = current_target_chord_notes.duplicate()
+	sorted_user_notes.sort()
+	sorted_target_notes.sort()
+
+	return sorted_user_notes == sorted_target_notes
+
+
+func _update_feedback_ui(is_correct: bool) -> void:
 	if is_correct:
-		$StatusLabel.text="Correct"
+		$StatusLabel.text = "Correct"
 	else:
-		$StatusLabel.text="Incorrect. Try again."
+		$StatusLabel.text = "Incorrect. Try again."
 
 
+func _reset_quiz_state() -> void:
 	# 次のインタラクションの準備
 	user_played_notes.clear() # 評価後、ユーザーの入力をクリア
 	# current_interaction_state = QuizInteractionState.AWAITING_INPUT # すぐに次の入力を待つ場合
 	current_interaction_state = QuizInteractionState.INITIAL # 問題選択に戻る場合
+
 
 # QuizUI: UIイベントのハンドラ。UI要素(ピアノ)を操作して音を鳴らす
 func _on_answer_pressed() -> void:
