@@ -107,10 +107,13 @@ func select_chord() -> void:
 	# ラベルを更新
 	update_label()
 
-# 混在: UIイベントのハンドラだが、ロジックを直接実行している
-# QuizUI: 鍵盤が押された、というイベントを受け取る
-# QuizManager: 状態をチェックし、ユーザーの回答を記録し、評価を開始する
+# QuizUI: 鍵盤が押された、というイベントを受け取る。ロジックは _handle_key_input に委譲
 func _on_individual_key_pressed(note_name: String) -> void:
+	_handle_key_input(note_name)
+
+
+# QuizManager: ユーザーのキー入力を処理し、クイズの状態を更新する
+func _handle_key_input(note_name: String) -> void:
 	if not (current_interaction_state == QuizInteractionState.AWAITING_INPUT or \
 			current_interaction_state == QuizInteractionState.COLLECTING_ANSWER):
 		return # 入力受付状態でない場合は何もしない
@@ -118,10 +121,10 @@ func _on_individual_key_pressed(note_name: String) -> void:
 	user_played_notes.append(note_name)
 	current_interaction_state = QuizInteractionState.COLLECTING_ANSWER
 
-	if user_played_notes.size() >= 3: # 3音入力されたら評価 (ターゲットコードの音数と比較するのがより正確)
+	# ターゲットコードと同じ数の音が入力されたら評価
+	if user_played_notes.size() >= current_target_chord_notes.size():
 		current_interaction_state = QuizInteractionState.EVALUATING_ANSWER
 		evaluate_answer()
-
 
 func evaluate_answer() -> void:
 	var is_correct: bool = _check_answer_logic()
