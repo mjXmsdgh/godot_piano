@@ -88,24 +88,24 @@ func update_label() -> void:
 	question_label.text=str(current_target_chord_name)
 
 # 混在: ロジックとUI更新が混ざっている
-# QuizManager: CodeManagerからコード情報を取得し、内部状態(current_target_chord...)を更新する
-# QuizUI: update_label()を呼び出してUIを更新する
+# QuizManager: コード選択ロジックを呼び出し、UI更新をトリガー
 func select_chord() -> void:
+	var chord_info = _select_chord_logic()
+	current_target_chord_name = chord_info[0]
+	current_target_chord_notes = chord_info[1]["notes"]
+	update_label()
+
+# QuizManager: CodeManagerからコード情報を取得するロジック
+func _select_chord_logic() -> Array:
 
 	# 利用可能なコードの数を取得
-	var num_chords=len(code_manager.chord_data)
+	var num_chords = len(code_manager.chord_data)
 
 	# ランダムなindexを取得
-	var random_number=randi() % num_chords
+	var random_number = randi() % num_chords
 
 	# コードを取得
-	var chord_info=code_manager.get_chord_by_index(random_number)
-
-	current_target_chord_name=chord_info[0]
-	current_target_chord_notes=chord_info[1]["notes"]
-
-	# ラベルを更新
-	update_label()
+	return code_manager.get_chord_by_index(random_number)
 
 # QuizUI: 鍵盤が押された、というイベントを受け取る。ロジックは _handle_key_input に委譲
 func _on_individual_key_pressed(note_name: String) -> void:
