@@ -72,10 +72,13 @@ func connect_signals() -> void:
 func _process(delta: float) -> void:
 	pass
 
-# 混在: UIイベントのハンドラだが、直接ロジックを呼び出している
-# QuizUI: ボタンが押された、というイベントを受け取る
-# QuizManager: select_chord()や状態変更といったロジックを実行する
+
+# QuizUI: ボタンが押された、というイベントを受け取る。ロジックは _start_new_question に委譲
 func _on_question_button_pressed() -> void:
+	_start_new_question()
+
+# QuizManager: 新しい問題を開始し、クイズの状態を更新する
+func _start_new_question() -> void:
 
 	# 問題を選んで表示
 	select_chord()
