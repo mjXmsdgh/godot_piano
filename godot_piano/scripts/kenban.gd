@@ -56,18 +56,60 @@ func _ready() -> void:
 		notes[note_name] = key_node
 
 
+# 異名同音（例: B#とC、BbとA#）を、鍵盤で定義されている標準的な音名に正規化する
+func _normalize_note_name(note_name: String) -> String:
+	if note_name.length() < 2:
+		return note_name # "C" のような単一文字や空文字列はそのまま返す
+
+	var note_base: String = note_name.substr(0, 1)
+	var octave_str: String = note_name.right(1)
+
+	if not octave_str.is_valid_int():
+		return note_name # "C#" のようにオクターブがない形式は非対応としてそのまま返す
+
+	var octave: int = octave_str.to_int()
+	var accidentals: String = note_name.substr(1, note_name.length() - 2)
+
+	# 音階の基本値を定義 (C=0)
+	const PITCH_CLASSES = {"C": 0, "D": 2, "E": 4, "F": 5, "G": 7, "A": 9, "B": 11}
+	if not PITCH_CLASSES.has(note_base):
+		return note_name # 不正な音階名
+
+	var pitch_class: int = PITCH_CLASSES[note_base]
+
+	# 変化記号を解釈してピッチクラスを計算
+	for acc in accidentals:
+		if acc == '#':
+			pitch_class += 1
+		elif acc == 'b':
+			pitch_class -= 1
+
+	# ピッチクラスが0-11の範囲に収まるように正規化し、オクターブを調整
+	while pitch_class < 0:
+		pitch_class += 12
+		octave -= 1
+	while pitch_class > 11:
+		pitch_class -= 12
+		octave += 1
+
+	# key_dataで使われているシャープ系の音名に変換
+	const NORMALIZED_NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+	var normalized_base = NORMALIZED_NOTES[pitch_class]
+
+	return normalized_base + str(octave)
+
 # 指定された音名の音を再生する
 func play_note(note_name: String) -> void:
-	# 辞書に指定された音名が存在するかチェック
-	if not notes.has(note_name):
-		printerr("KenbanNode: Key '", note_name, "' not found in notes dictionary.")
+	var normalized_name: String = _normalize_note_name(note_name)
+	if not notes.has(normalized_name):
+		printerr("KenbanNode: Key '", normalized_name, "' (normalized from '", note_name, "') not found in notes dictionary.")
 		return
 
 	# 辞書から音名に対応する鍵盤ノードを取得
-	var key_node = notes[note_name]
+	var key_node = notes[normalized_name]
 	# 取得したノードが有効か（削除されていないか等）をチェック
 	if not is_instance_valid(key_node):
-		printerr("KenbanNode: key_node is not valid for note_name: '", note_name, "'")
+		printerr("KenbanNode: key_node is not valid for note_name: '", normalized_name, "'")
 		return
 		
 	# 鍵盤ノードが再生メソッドを持っているかチェック
