@@ -27,31 +27,34 @@ enum QuizInteractionState {
 }
 var current_interaction_state: QuizInteractionState = QuizInteractionState.INITIAL
 
-# 混在: UIの準備とロジックの準備が混ざっている
-# QuizUI: is_instance_validでUIノードの存在を確認
-# QuizManager: 状態の初期化、乱数初期化、ロジックの開始(select_chord)
+# Controller: UIとManagerの初期化処理を呼び出す
 func _ready() -> void:
-	# ピアノキーボードノード
-	if not is_instance_valid(piano_keyboard_node):
-		push_warning("QuestionNode: Piano keyboard node ('../kenban') not found. Key press signals will not be connected.")
-		return
-
-	# CodeManagerノード
-	if not is_instance_valid(code_manager):
-		push_warning("QuestionNode: CodeManager node ('../CodeManager') not found. Chord selection might fail.")
-
-	# 問題表示用ラベルノード
-	if not is_instance_valid(question_label):
-		push_warning("QuestionNode: Question Label node ('$Question') not found. Question text will not be updated.")
-		return
-
-	current_interaction_state = QuizInteractionState.INITIAL # 明示的に初期状態を設定
-
-	randomize() # 乱数ジェネレータを初期化
+	if not _initialize_ui_components():
+		return # UIの初期化に失敗した場合は処理を中断
+	
+	_initialize_manager_state()
 
 	connect_signals()
 
 	select_chord()
+
+# QuizUI: UIコンポーネントの存在を検証する
+func _initialize_ui_components() -> bool:
+	if not is_instance_valid(piano_keyboard_node):
+		push_warning("QuestionNode: Piano keyboard node ('../kenban') not found. Key press signals will not be connected.")
+		return false
+	if not is_instance_valid(question_label):
+		push_warning("QuestionNode: Question Label node ('$Question') not found. Question text will not be updated.")
+		return false
+	return true
+
+# QuizManager: ロジックコンポーネントと状態を初期化する
+func _initialize_manager_state() -> void:
+	if not is_instance_valid(code_manager):
+		push_warning("QuestionNode: CodeManager node ('../CodeManager') not found. Chord selection might fail.")
+
+	current_interaction_state = QuizInteractionState.INITIAL
+	randomize()
 
 # 混在: UI要素(キー)のシグナルを接続する処理
 # QuizUI: 自身の管理するUI要素(キー)をループしてシグナル接続を行う
