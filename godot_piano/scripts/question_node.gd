@@ -29,14 +29,19 @@ var current_interaction_state: QuizInteractionState = QuizInteractionState.INITI
 
 # Controller: UIとManagerの初期化処理を呼び出す
 func _ready() -> void:
+
+	# UIコンポーネントの存在を検証する
 	if not _initialize_ui_components():
 		return # UIの初期化に失敗した場合は処理を中断
 	
+	# ロジックコンポーネントと状態を初期化する
 	_initialize_manager_state()
 
+	# signalをつなぐ
 	connect_signals()
 
 	select_chord()
+
 
 # QuizUI: UIコンポーネントの存在を検証する
 func _initialize_ui_components() -> bool:
@@ -48,6 +53,7 @@ func _initialize_ui_components() -> bool:
 		return false
 	return true
 
+
 # QuizManager: ロジックコンポーネントと状態を初期化する
 func _initialize_manager_state() -> void:
 	if not is_instance_valid(code_manager):
@@ -56,20 +62,56 @@ func _initialize_manager_state() -> void:
 	current_interaction_state = QuizInteractionState.INITIAL
 	randomize()
 
-# 混在: UI要素(キー)のシグナルを接続する処理
-# QuizUI: 自身の管理するUI要素(キー)をループしてシグナル接続を行う
-# QuizManager: シグナルの接続先(_on_individual_key_pressed)がロジックを含んでいる
-func connect_signals() -> void:
-	if not is_instance_valid(piano_keyboard_node):
-		return # ピアノキーボードノードが無効なら何もしない
 
-	# piano_keyboard_node の子ノード（個々のキー）を調べてシグナルに接続
-	for key_node in piano_keyboard_node.get_children():
+# Controller: UIイベントとManagerロジックを接続する
+func connect_signals() -> void:
+	var key_nodes: Array = _get_all_key_nodes()
+
+	for key_node in key_nodes:
 		# key.gd スクリプトがアタッチされたノードは "key_pressed" シグナルを持つはず
 		if key_node.has_signal("key_pressed"):
 			# まだ接続されていなければ接続する (重複接続を避ける)
 			if not key_node.is_connected("key_pressed", Callable(self, "_on_individual_key_pressed")):
 				key_node.connect("key_pressed", Callable(self, "_on_individual_key_pressed"))
+
+
+# QuizUI: 接続対象となる全てのキーノードを取得する
+func _get_all_key_nodes() -> Array:
+	if not is_instance_valid(piano_keyboard_node):
+		push_warning("QuestionNode: Cannot get key nodes because piano_keyboard_node is invalid.")
+		return []
+
+	# piano_keyboard_node の子ノード（個々のキー）を返す
+	# この実装は、piano_keyboard_nodeの内部構造に依存している
+	return piano_keyboard_node.get_children()
+
+
+# 混在: ロジックとUI更新が混ざっている
+# QuizManager: コード選択ロジックを呼び出し、UI更新をトリガー
+func select_chord() -> void:
+	var chord_info = _select_chord_logic()
+	current_target_chord_name = chord_info[0]
+	current_target_chord_notes = chord_info[1]["notes"]
+	update_label()
+
+
+# QuizManager: CodeManagerからコード情報を取得するロジック
+func _select_chord_logic() -> Array:
+
+	# 利用可能なコードの数を取得
+	var num_chords = len(code_manager.chord_data)
+
+	# ランダムなindexを取得
+	var random_number = randi() % num_chords
+
+	# コードを取得
+	return code_manager.get_chord_by_index(random_number)
+
+
+# QuizUI: UI要素であるラベルのテキストを更新する
+func update_label() -> void:
+	question_label.text=str(current_target_chord_name)
+
 
 # どちらにも属さない (未使用)
 func _process(delta: float) -> void:
@@ -89,29 +131,6 @@ func _start_new_question() -> void:
 	# 状態を「入力待ち」に変更
 	current_interaction_state = QuizInteractionState.AWAITING_INPUT
 
-# QuizUI: UI要素であるラベルのテキストを更新する
-func update_label() -> void:
-	question_label.text=str(current_target_chord_name)
-
-# 混在: ロジックとUI更新が混ざっている
-# QuizManager: コード選択ロジックを呼び出し、UI更新をトリガー
-func select_chord() -> void:
-	var chord_info = _select_chord_logic()
-	current_target_chord_name = chord_info[0]
-	current_target_chord_notes = chord_info[1]["notes"]
-	update_label()
-
-# QuizManager: CodeManagerからコード情報を取得するロジック
-func _select_chord_logic() -> Array:
-
-	# 利用可能なコードの数を取得
-	var num_chords = len(code_manager.chord_data)
-
-	# ランダムなindexを取得
-	var random_number = randi() % num_chords
-
-	# コードを取得
-	return code_manager.get_chord_by_index(random_number)
 
 # QuizUI: 鍵盤が押された、というイベントを受け取る。ロジックは _handle_key_input に委譲
 func _on_individual_key_pressed(note_name: String) -> void:
