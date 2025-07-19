@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dleuwhqk3ls6j"]
+[gd_scene load_steps=5 format=3 uid="uid://dleuwhqk3ls6j"]
 
 [ext_resource type="PackedScene" uid="uid://54b4gysqftl3" path="res://scenes/kenban.tscn" id="1_f5wq4"]
 [ext_resource type="PackedScene" uid="uid://2jtchecwew7c" path="res://scenes/chord_manager.tscn" id="2_8vd0h"]
 [ext_resource type="Script" path="res://scripts/question_node.gd" id="3_ipiwp"]
+[ext_resource type="Script" path="res://scripts/question_logic.gd" id="4_co7rt"]
 
 [node name="Question_ChordToNotes" type="Node2D"]
 
@@ -39,6 +40,9 @@ offset_top = 187.0
 offset_right = 240.0
 offset_bottom = 218.0
 text = "Answer"
+
+[node name="Question_Logic" type="Node2D" parent="QuestionNode"]
+script = ExtResource("4_co7rt")
 
 [connection signal="pressed" from="QuestionNode/QuestionButton" to="QuestionNode" method="_on_question_button_pressed"]
 [connection signal="pressed" from="QuestionNode/answer" to="QuestionNode" method="_on_answer_pressed"]
