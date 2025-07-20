@@ -19,13 +19,12 @@ func init() -> void:
 		push_warning("QuestionNode: CodeManager node ('../CodeManager') not found. Chord selection might fail.")
 
 	
-func select_chord() -> void:
-	var chord_info=_select_chord_logic()
-	#current_target_chord_name=chord_info[0]
-	#current_target_chord_notes=chord_info[1]["notes"]
-	
-	
+
 func _select_chord_logic() -> Array:
-	var num_chords=len(code_manager.chord_data)
-	var random_number=randi()%num_chords
+
+	# 利用可能なコードの数を取得
+	var num_chords = len(code_manager.chord_data)
+
+	var random_number=randi() % num_chords
+
 	return code_manager.get_chord_by_index(random_number)

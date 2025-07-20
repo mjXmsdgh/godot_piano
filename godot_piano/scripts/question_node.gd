@@ -40,7 +40,6 @@ func _ready() -> void:
 	# ロジックコンポーネントと状態を初期化する
 	question_logic.init()
 	
-
 	# signalをつなぐ
 	connect_signals()
 
@@ -93,23 +92,11 @@ func _get_all_key_nodes() -> Array:
 # 混在: ロジックとUI更新が混ざっている
 # QuizManager: コード選択ロジックを呼び出し、UI更新をトリガー
 func select_chord() -> void:
-	var chord_info = _select_chord_logic()
+	#var chord_info = _select_chord_logic()
+	var chord_info=question_logic._select_chord_logic()
 	current_target_chord_name = chord_info[0]
 	current_target_chord_notes = chord_info[1]["notes"]
 	update_label()
-
-
-# QuizManager: CodeManagerからコード情報を取得するロジック
-func _select_chord_logic() -> Array:
-
-	# 利用可能なコードの数を取得
-	var num_chords = len(code_manager.chord_data)
-
-	# ランダムなindexを取得
-	var random_number = randi() % num_chords
-
-	# コードを取得
-	return code_manager.get_chord_by_index(random_number)
 
 
 # QuizUI: UI要素であるラベルのテキストを更新する
