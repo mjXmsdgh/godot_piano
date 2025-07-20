@@ -11,6 +11,9 @@ extends Node2D
 # QuizManager: 外部のロジックコンポーネントへの参照
 @onready var code_manager: Node = get_node_or_null("../CodeManager")
 
+@onready var question_logic: Node = get_node_or_null("./Question_Logic")
+
+
 # QuizManager: クイズの正解データ
 var current_target_chord_name: String = ""
 var current_target_chord_notes
@@ -35,7 +38,8 @@ func _ready() -> void:
 		return # UIの初期化に失敗した場合は処理を中断
 	
 	# ロジックコンポーネントと状態を初期化する
-	_initialize_manager_state()
+	question_logic.init()
+	
 
 	# signalをつなぐ
 	connect_signals()
