@@ -96,7 +96,6 @@ func select_chord() -> void:
 	var chord_info=question_logic._select_chord_logic()
 	current_target_chord_name = chord_info[0]
 	current_target_chord_notes = chord_info[1]["notes"]
-	update_label()
 
 
 # QuizUI: UI要素であるラベルのテキストを更新する
@@ -118,6 +117,8 @@ func _start_new_question() -> void:
 
 	# 問題を選んで表示
 	select_chord()
+
+	update_label()
 
 	# 状態を「入力待ち」に変更
 	current_interaction_state = QuizInteractionState.AWAITING_INPUT
