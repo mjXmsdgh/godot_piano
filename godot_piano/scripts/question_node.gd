@@ -39,6 +39,9 @@ func _ready() -> void:
 	
 	# ロジックコンポーネントと状態を初期化する
 	question_logic.init()
+
+	current_interaction_state = QuizInteractionState.INITIAL
+	randomize()
 	
 	# signalをつなぐ
 	connect_signals()
@@ -55,15 +58,6 @@ func _initialize_ui_components() -> bool:
 		push_warning("QuestionNode: Question Label node ('$Question') not found. Question text will not be updated.")
 		return false
 	return true
-
-
-# QuizManager: ロジックコンポーネントと状態を初期化する
-func _initialize_manager_state() -> void:
-	if not is_instance_valid(code_manager):
-		push_warning("QuestionNode: CodeManager node ('../CodeManager') not found. Chord selection might fail.")
-
-	current_interaction_state = QuizInteractionState.INITIAL
-	randomize()
 
 
 # Controller: UIイベントとManagerロジックを接続する
@@ -98,11 +92,6 @@ func select_chord() -> void:
 	current_target_chord_notes = chord_info[1]["notes"]
 
 
-# QuizUI: UI要素であるラベルのテキストを更新する
-func update_label() -> void:
-	question_label.text=str(current_target_chord_name)
-
-
 # どちらにも属さない (未使用)
 func _process(delta: float) -> void:
 	pass
@@ -124,6 +113,12 @@ func _start_new_question() -> void:
 	current_interaction_state = QuizInteractionState.AWAITING_INPUT
 
 
+# QuizUI: UI要素であるラベルのテキストを更新する
+func update_label() -> void:
+	question_label.text=str(current_target_chord_name)
+
+
+
 # QuizUI: 鍵盤が押された、というイベントを受け取る。ロジックは _handle_key_input に委譲
 func _on_individual_key_pressed(note_name: String) -> void:
 	_handle_key_input(note_name)
@@ -142,11 +137,12 @@ func _handle_key_input(note_name: String) -> void:
 	if user_played_notes.size() >= current_target_chord_notes.size():
 		current_interaction_state = QuizInteractionState.EVALUATING_ANSWER
 		evaluate_answer()
+		_reset_quiz_state()
+
 
 func evaluate_answer() -> void:
 	var is_correct: bool = _check_answer_logic()
 	_update_feedback_ui(is_correct)
-	_reset_quiz_state()
 
 
 func _check_answer_logic() -> bool:
