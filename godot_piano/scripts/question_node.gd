@@ -100,6 +100,9 @@ func _process(delta: float) -> void:
 func _on_question_button_pressed() -> void:
 	_start_new_question()
 
+	# 状態を「入力待ち」に変更
+	current_interaction_state = QuizInteractionState.AWAITING_INPUT
+
 # QuizManager: 新しい問題を開始し、クイズの状態を更新する
 func _start_new_question() -> void:
 
@@ -108,8 +111,7 @@ func _start_new_question() -> void:
 
 	update_label()
 
-	# 状態を「入力待ち」に変更
-	current_interaction_state = QuizInteractionState.AWAITING_INPUT
+
 
 
 # QuizUI: UI要素であるラベルのテキストを更新する
@@ -120,23 +122,21 @@ func update_label() -> void:
 
 # QuizUI: 鍵盤が押された、というイベントを受け取る。ロジックは _handle_key_input に委譲
 func _on_individual_key_pressed(note_name: String) -> void:
-	_handle_key_input(note_name)
-
-
-# QuizManager: ユーザーのキー入力を処理し、クイズの状態を更新する
-func _handle_key_input(note_name: String) -> void:
 	if not (current_interaction_state == QuizInteractionState.AWAITING_INPUT or \
 			current_interaction_state == QuizInteractionState.COLLECTING_ANSWER):
 		return # 入力受付状態でない場合は何もしない
 
 	user_played_notes.append(note_name)
+
 	current_interaction_state = QuizInteractionState.COLLECTING_ANSWER
 
 	# ターゲットコードと同じ数の音が入力されたら評価
 	if user_played_notes.size() >= current_target_chord_notes.size():
 		current_interaction_state = QuizInteractionState.EVALUATING_ANSWER
 		evaluate_answer()
-		_reset_quiz_state()
+		user_played_notes.clear() # 評価後、ユーザーの入力をクリア
+		# current_interaction_state = QuizInteractionState.AWAITING_INPUT # すぐに次の入力を待つ場合
+		current_interaction_state = QuizInteractionState.INITIAL # 問題選択に戻る場合
 
 
 func evaluate_answer() -> void:
@@ -162,13 +162,6 @@ func _update_feedback_ui(is_correct: bool) -> void:
 		$StatusLabel.text = "Correct"
 	else:
 		$StatusLabel.text = "Incorrect. Try again."
-
-
-func _reset_quiz_state() -> void:
-	# 次のインタラクションの準備
-	user_played_notes.clear() # 評価後、ユーザーの入力をクリア
-	# current_interaction_state = QuizInteractionState.AWAITING_INPUT # すぐに次の入力を待つ場合
-	current_interaction_state = QuizInteractionState.INITIAL # 問題選択に戻る場合
 
 
 # QuizUI: UIイベントのハンドラ。UI要素(ピアノ)を操作して音を鳴らす
