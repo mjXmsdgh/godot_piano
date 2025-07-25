@@ -13,9 +13,9 @@ enum QuizInteractionState {
 }
 var current_interaction_state: QuizInteractionState = QuizInteractionState.INITIAL
 
-
-
-
+func is_accepting_input() -> bool:
+	return current_interaction_state == QuizInteractionState.AWAITING_INPUT or \
+			current_interaction_state == QuizInteractionState.COLLECTING_ANSWER
 
 
 # Called when the node enters the scene tree for the first time.

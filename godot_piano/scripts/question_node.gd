@@ -117,9 +117,9 @@ func update_label() -> void:
 
 # QuizUI: 鍵盤が押された、というイベントを受け取る。ロジックは _handle_key_input に委譲
 func _on_individual_key_pressed(note_name: String) -> void:
-	if not (question_logic.current_interaction_state == QuizInteractionState.AWAITING_INPUT or \
-			question_logic.current_interaction_state == QuizInteractionState.COLLECTING_ANSWER):
-		return # 入力受付状態でない場合は何もしない
+
+	if not question_logic.is_accepting_input():
+		return
 
 	user_played_notes.append(note_name)
 
