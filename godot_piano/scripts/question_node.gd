@@ -123,15 +123,15 @@ func _on_individual_key_pressed(note_name: String) -> void:
 
 	user_played_notes.append(note_name)
 
-	question_logic.current_interaction_state = QuizInteractionState.COLLECTING_ANSWER
+	question_logic.transition_to_collecting()
 	
 
 	# ターゲットコードと同じ数の音が入力されたら評価
 	if user_played_notes.size() >= current_target_chord_notes.size():
-		question_logic.current_interaction_state = QuizInteractionState.EVALUATING_ANSWER
+		question_logic.transition_to_evaluating()
 		evaluate_answer()
 		user_played_notes.clear() # 評価後、ユーザーの入力をクリア
-		question_logic.current_interaction_state = QuizInteractionState.INITIAL # 問題選択に戻る場合
+		question_logic.transition_to_initial() # 問題選択に戻る場合
 
 
 func evaluate_answer() -> void:

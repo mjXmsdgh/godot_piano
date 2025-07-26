@@ -30,6 +30,21 @@ func _process(delta: float) -> void:
 	pass
 
 
+func transition_to_collecting() -> void:
+	# ユーザーがキーを押し始めたので、回答収集中状態に遷移させる
+	# is_accepting_input() ですでにチェックされているので、状態を更新するだけでOK
+	current_interaction_state = QuizInteractionState.COLLECTING_ANSWER
+
+
+func transition_to_evaluating() -> void:
+	# 回答が揃ったので、評価状態に遷移させる
+	current_interaction_state = QuizInteractionState.EVALUATING_ANSWER
+
+
+func transition_to_initial() -> void:
+	# 評価が完了したので、初期状態に戻す
+	current_interaction_state = QuizInteractionState.INITIAL
+
 func init() -> void:
 	if not is_instance_valid(code_manager):
 		push_warning("QuestionNode: CodeManager node ('../CodeManager') not found. Chord selection might fail.")
