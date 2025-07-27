@@ -21,14 +21,6 @@ var current_target_chord_notes
 # QuizManager: ユーザーの回答データ
 var user_played_notes: Array = []
 
-# QuizManager: クイズの状態を管理する
-enum QuizInteractionState {
-	INITIAL,            # 初期状態、または問題選択前
-	AWAITING_INPUT,     # 問題提示後、ユーザーの最初の入力を待っている状態
-	COLLECTING_ANSWER,  # ユーザーが回答を入力（鍵盤を押下）している状態
-	EVALUATING_ANSWER   # ユーザーの回答を評価（判定）している状態
-}
-
 
 # Controller: UIとManagerの初期化処理を呼び出す
 func _ready() -> void:
