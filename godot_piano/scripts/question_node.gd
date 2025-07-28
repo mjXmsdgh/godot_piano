@@ -14,14 +14,6 @@ extends Node2D
 @onready var question_logic: Node = get_node_or_null("./Question_Logic")
 
 
-# QuizManager: クイズの正解データ
-var current_target_chord_name: String = ""
-var current_target_chord_notes
-
-# QuizManager: ユーザーの回答データ
-var user_played_notes: Array = []
-
-
 # Controller: UIとManagerの初期化処理を呼び出す
 func _ready() -> void:
 
@@ -37,7 +29,7 @@ func _ready() -> void:
 	# signalをつなぐ
 	connect_signals()
 
-	select_chord()
+	_start_new_question()
 
 
 # QuizUI: UIコンポーネントの存在を検証する
@@ -74,14 +66,6 @@ func _get_all_key_nodes() -> Array:
 	return piano_keyboard_node.get_children()
 
 
-# 混在: ロジックとUI更新が混ざっている
-# QuizManager: コード選択ロジックを呼び出し、UI更新をトリガー
-func select_chord() -> void:
-	var chord_info=question_logic._select_chord_logic()
-	current_target_chord_name = chord_info[0]
-	current_target_chord_notes = chord_info[1]["notes"]
-
-
 # どちらにも属さない (未使用)
 func _process(delta: float) -> void:
 	pass
@@ -94,17 +78,14 @@ func _on_question_button_pressed() -> void:
 
 # QuizManager: 新しい問題を開始し、クイズの状態を更新する
 func _start_new_question() -> void:
-
 	# 問題を選んで表示
-	select_chord()
-
+	question_logic.select_new_chord()
 	update_label()
 
 
 # QuizUI: UI要素であるラベルのテキストを更新する
 func update_label() -> void:
-	question_label.text=str(current_target_chord_name)
-
+	question_label.text = question_logic.get_current_chord_name()
 
 
 # QuizUI: 鍵盤が押された、というイベントを受け取る。ロジックは _handle_key_input に委譲
@@ -113,35 +94,13 @@ func _on_individual_key_pressed(note_name: String) -> void:
 	if not question_logic.is_accepting_input():
 		return
 
-	user_played_notes.append(note_name)
-
-	question_logic.transition_to_collecting()
-	
+	# ロジックコントローラーに入力を渡す
+	question_logic.add_user_note(note_name)
 
 	# ターゲットコードと同じ数の音が入力されたら評価
-	if user_played_notes.size() >= current_target_chord_notes.size():
-		question_logic.transition_to_evaluating()
-		evaluate_answer()
-		user_played_notes.clear() # 評価後、ユーザーの入力をクリア
-		question_logic.transition_to_initial() # 問題選択に戻る場合
-
-
-func evaluate_answer() -> void:
-	var is_correct: bool = _check_answer_logic()
-	_update_feedback_ui(is_correct)
-
-
-func _check_answer_logic() -> bool:
-
-	if user_played_notes.size() != current_target_chord_notes.size():
-		return false
-
-	var sorted_user_notes = user_played_notes.duplicate()
-	var sorted_target_notes = current_target_chord_notes.duplicate()
-	sorted_user_notes.sort()
-	sorted_target_notes.sort()
-
-	return sorted_user_notes == sorted_target_notes
+	if question_logic.is_answer_ready():
+		var is_correct: bool = question_logic.evaluate_answer()
+		_update_feedback_ui(is_correct)
 
 
 func _update_feedback_ui(is_correct: bool) -> void:
@@ -153,6 +112,7 @@ func _update_feedback_ui(is_correct: bool) -> void:
 
 # QuizUI: UIイベントのハンドラ。UI要素(ピアノ)を操作して音を鳴らす
 func _on_answer_pressed() -> void:
-
-	for item in current_target_chord_notes:
+	# 正解の音を鳴らす機能。ロジックから正解データを取得する必要がある
+	var correct_notes = question_logic.current_target_chord_notes
+	for item in correct_notes:
 		piano_keyboard_node.play_note(item)

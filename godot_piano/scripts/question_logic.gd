@@ -13,6 +13,12 @@ enum QuizInteractionState {
 }
 var current_interaction_state: QuizInteractionState = QuizInteractionState.INITIAL
 
+# クイズの状態データ
+var current_target_chord_name: String = ""
+var current_target_chord_notes: Array = []
+var user_played_notes: Array = []
+
+
 func is_accepting_input() -> bool:
 	return current_interaction_state == QuizInteractionState.AWAITING_INPUT or \
 			current_interaction_state == QuizInteractionState.COLLECTING_ANSWER
@@ -49,15 +55,52 @@ func init() -> void:
 	if not is_instance_valid(code_manager):
 		push_warning("QuestionNode: CodeManager node ('../CodeManager') not found. Chord selection might fail.")
 
-	
 
-func _select_chord_logic() -> Array:
-
+func select_new_chord() -> void:
+	# 状態をリセット
+	user_played_notes.clear()
 	current_interaction_state = QuizInteractionState.AWAITING_INPUT
 
-	# 利用可能なコードの数を取得
+	# 新しいコードを選択
 	var num_chords = len(code_manager.chord_data)
+	var random_number = randi() % num_chords
+	var chord_info = code_manager.get_chord_by_index(random_number)
+	
+	current_target_chord_name = chord_info[0]
+	current_target_chord_notes = chord_info[1]["notes"]
 
-	var random_number=randi() % num_chords
 
-	return code_manager.get_chord_by_index(random_number)
+func get_current_chord_name() -> String:
+	return current_target_chord_name
+
+
+func add_user_note(note_name: String) -> void:
+	user_played_notes.append(note_name)
+	transition_to_collecting()
+
+
+func is_answer_ready() -> bool:
+	return user_played_notes.size() >= current_target_chord_notes.size()
+
+
+func evaluate_answer() -> bool:
+	transition_to_evaluating()
+	var is_correct = _check_answer_logic()
+	
+	# 次の問題のために状態をリセット
+	user_played_notes.clear()
+	transition_to_initial()
+	
+	return is_correct
+
+
+func _check_answer_logic() -> bool:
+	if user_played_notes.size() != current_target_chord_notes.size():
+		return false
+
+	var sorted_user_notes = user_played_notes.duplicate()
+	var sorted_target_notes = current_target_chord_notes.duplicate()
+	sorted_user_notes.sort()
+	sorted_target_notes.sort()
+
+	return sorted_user_notes == sorted_target_notes
