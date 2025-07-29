@@ -80,11 +80,8 @@ func _on_question_button_pressed() -> void:
 func _start_new_question() -> void:
 	# 問題を選んで表示
 	question_logic.select_new_chord()
-	update_label()
 
-
-# QuizUI: UI要素であるラベルのテキストを更新する
-func update_label() -> void:
+	# UI要素であるラベルのテキストを更新する
 	question_label.text = question_logic.get_current_chord_name()
 
 
