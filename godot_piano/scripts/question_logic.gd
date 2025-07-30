@@ -19,6 +19,7 @@ var current_target_chord_notes: Array = []
 var user_played_notes: Array = []
 
 
+# ユーザーの入力を受け付ける状態か判定する
 func is_accepting_input() -> bool:
 	return current_interaction_state == QuizInteractionState.AWAITING_INPUT or \
 			current_interaction_state == QuizInteractionState.COLLECTING_ANSWER
@@ -36,26 +37,31 @@ func _process(delta: float) -> void:
 	pass
 
 
+# 状態を「回答収集中」に遷移させる
 func transition_to_collecting() -> void:
 	# ユーザーがキーを押し始めたので、回答収集中状態に遷移させる
 	# is_accepting_input() ですでにチェックされているので、状態を更新するだけでOK
 	current_interaction_state = QuizInteractionState.COLLECTING_ANSWER
 
 
+# 状態を「評価中」に遷移させる
 func transition_to_evaluating() -> void:
 	# 回答が揃ったので、評価状態に遷移させる
 	current_interaction_state = QuizInteractionState.EVALUATING_ANSWER
 
 
+# 状態を「初期状態」に遷移させる
 func transition_to_initial() -> void:
 	# 評価が完了したので、初期状態に戻す
 	current_interaction_state = QuizInteractionState.INITIAL
 
+# 初期化処理
 func init() -> void:
 	if not is_instance_valid(code_manager):
 		push_warning("QuestionNode: CodeManager node ('../CodeManager') not found. Chord selection might fail.")
 
 
+# 新しい問題のコードを選択する
 func select_new_chord() -> void:
 	# 状態をリセット
 	user_played_notes.clear()
@@ -70,19 +76,23 @@ func select_new_chord() -> void:
 	current_target_chord_notes = chord_info[1]["notes"]
 
 
+# 現在の問題のコード名を取得する
 func get_current_chord_name() -> String:
 	return current_target_chord_name
 
 
+# ユーザーが押したノートを追加する
 func add_user_note(note_name: String) -> void:
 	user_played_notes.append(note_name)
 	transition_to_collecting()
 
 
+# 回答に必要な数のノートが押されたか判定する
 func is_answer_ready() -> bool:
 	return user_played_notes.size() >= current_target_chord_notes.size()
 
 
+# ユーザーの回答を評価する
 func evaluate_answer() -> bool:
 	transition_to_evaluating()
 	var is_correct = _check_answer_logic()
@@ -94,6 +104,7 @@ func evaluate_answer() -> bool:
 	return is_correct
 
 
+# 回答の正誤を判定する内部ロジック
 func _check_answer_logic() -> bool:
 	if user_played_notes.size() != current_target_chord_notes.size():
 		return false
